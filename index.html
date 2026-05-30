@@ -122,6 +122,13 @@
     color: var(--watermark);
     pointer-events: none; z-index: 0; user-select: none; will-change: transform;
   }
+  /* 手机端：46vw 太小且偏右上被 overflow 裁掉、透明度也太淡 → 放大、
+     重定位到可见区、并把水印透明度提一档（深/浅主题各自覆盖） */
+  @media (max-width: 720px) {
+    :root { --watermark: rgba(214, 68, 47, 0.10); }
+    [data-theme="light"] { --watermark: rgba(192, 57, 42, 0.12); }
+    .hero-mark { font-size: 90vw; right: -14%; top: -2%; }
+  }
   .hero .wrap { position: relative; z-index: 1; }
   .eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
