@@ -1,0 +1,310 @@
+// 奇语官网 博客 + 文档 静态站点生成器
+//
+// 这是「狗粮」：用奇语自己写的生成器，构建时把内容渲染成静态 HTML，
+// 输出到 ../blog 和 ../docs，提交后由 GitHub Pages 服务。
+//
+// 跑：cd 站点源 && qi run 生成站点.qi
+// （工作目录在 站点源/，输出写到上一级 blog/ docs/）
+
+包 主程序;
+
+导入 标准库.输入输出 作为 IO;
+导入 标准库.字符串;
+
+// ============================================================
+// 共享主题（深/浅切换，延续官网朱砂红水墨风）
+// ============================================================
+函数 页面CSS() : 字符串 {
+    返回 "<style>"
+    + ":root{--ink:#14110f;--ink2:#1c1916;--paper:#f4efe6;--dim:#b8af9f;--red:#d6442f;--red2:#e8674f;--gold:#d4ac57;--line:rgba(244,239,230,.10);--code:#1c1916;--codefg:#f4efe6;"
+    + "--display:'Fraunces','Noto Serif SC',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif;}"
+    + "[data-theme=light]{--ink:#f5efe3;--ink2:#fffdf7;--paper:#221c17;--dim:#6e6457;--red:#c0392a;--red2:#d2543f;--gold:#9a7a2c;--line:rgba(34,28,23,.13);}"
+    + "*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}"
+    + "body{background:var(--ink);color:var(--paper);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}"
+    + "::selection{background:var(--red);color:#fdf2ee}a{color:var(--red2);text-decoration:none}a:hover{text-decoration:underline}"
+    + "nav{position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);background:var(--ink2);border-bottom:1px solid var(--line)}"
+    + "nav .in{max-width:1080px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}"
+    + ".brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}"
+    + ".seal{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:var(--red);color:#fdf2ee;font-family:var(--display);font-weight:800;font-size:20px}"
+    + "nav a.nl{color:var(--dim);font-size:14.5px}nav a.nl:hover{color:var(--paper);text-decoration:none}nav a.nl.on{color:var(--paper);font-weight:600}"
+    + ".tg{margin-left:auto;width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--paper);cursor:pointer;font-size:16px}"
+    + ".sun{display:none}[data-theme=light] .sun{display:inline}[data-theme=light] .moon{display:none}"
+    + ".wrap{max-width:1080px;margin:0 auto;padding:48px 24px 80px;display:flex;gap:48px}"
+    + ".side{flex:0 0 200px;position:sticky;top:84px;align-self:flex-start}.side h4{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin:18px 0 8px}"
+    + ".side a{display:block;color:var(--dim);font-size:14.5px;padding:5px 0}.side a:hover{color:var(--paper);text-decoration:none}.side a.on{color:var(--red2);font-weight:600}"
+    + ".main{flex:1;min-width:0;max-width:760px}"
+    + "h1{font-family:var(--display);font-size:clamp(30px,5vw,46px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:14px}"
+    + "h2{font-family:var(--display);font-size:27px;font-weight:700;margin:42px 0 14px;letter-spacing:-.5px}"
+    + "h3{font-size:19px;font-weight:700;margin:28px 0 10px}"
+    + ".main p{margin:14px 0;color:var(--paper)}.main ul,.main ol{margin:14px 0 14px 24px}.main li{margin:6px 0}"
+    + ".lead{font-size:18px;color:var(--dim);margin-bottom:8px}"
+    + ".meta{color:var(--dim);font-size:14px;margin-bottom:30px}"
+    + "code{font-family:var(--mono);font-size:.9em;background:var(--ink2);padding:2px 6px;border-radius:5px;color:var(--red2)}"
+    + "pre{background:var(--code);color:var(--codefg);border:1px solid var(--line);border-radius:12px;padding:18px;overflow-x:auto;margin:18px 0}"
+    + "pre code{background:none;padding:0;color:var(--codefg);font-size:13.5px;line-height:1.7}"
+    + "table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14.5px}th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}th{color:var(--gold)}"
+    + "blockquote{border-left:3px solid var(--red);padding:4px 16px;margin:18px 0;color:var(--dim)}"
+    + ".card{display:block;border:1px solid var(--line);border-radius:12px;padding:22px;margin:14px 0;background:var(--ink2);transition:border-color .2s,transform .15s}"
+    + ".card:hover{border-color:var(--red);transform:translateY(-2px);text-decoration:none}.card .t{font-family:var(--display);font-size:21px;font-weight:700;color:var(--paper)}.card .d{color:var(--dim);font-size:14.5px;margin-top:6px}.card .m{color:var(--gold);font-size:13px;margin-top:10px}"
+    + "footer{border-top:1px solid var(--line);padding:30px 24px;text-align:center;color:var(--dim);font-size:13.5px}"
+    + "@media(max-width:760px){.wrap{flex-direction:column;gap:24px}.side{position:static;flex:none}}"
+    + "</style>";
+}
+
+函数 主题脚本() : 字符串 {
+    返回 "<script>(function(){try{var s=localStorage.getItem('qi-theme');var l=matchMedia('(prefers-color-scheme: light)').matches;if(s==='light'||(!s&&l))document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>";
+}
+
+函数 切换脚本() : 字符串 {
+    返回 "<script>document.getElementById('tg').onclick=function(){var d=document.documentElement;if(d.getAttribute('data-theme')==='light'){d.removeAttribute('data-theme');try{localStorage.setItem('qi-theme','dark')}catch(e){}}else{d.setAttribute('data-theme','light');try{localStorage.setItem('qi-theme','light')}catch(e){}}};</script>";
+}
+
+// 顶部导航。当前: "blog" 或 "docs"，用于高亮
+函数 页头(当前: 字符串) : 字符串 {
+    变量 博客类: 字符串 = "nl";
+    变量 文档类: 字符串 = "nl";
+    如果 (字符串::等于(当前, "blog") == 1) { 博客类 = "nl on"; }
+    如果 (字符串::等于(当前, "docs") == 1) { 文档类 = "nl on"; }
+    返回 "<nav><div class=in>"
+    + "<a class=brand href=\"/\"><span class=seal>奇</span> 奇语 Qi</a>"
+    + "<a class=\"" + 文档类 + "\" href=\"/docs/\">文档</a>"
+    + "<a class=\"" + 博客类 + "\" href=\"/blog/\">博客</a>"
+    + "<a class=nl href=\"https://github.com/qilang-project/qi\">GitHub</a>"
+    + "<button class=tg id=tg><span class=moon>🌙</span><span class=sun>☀️</span></button>"
+    + "</div></nav>";
+}
+
+函数 页脚() : 字符串 {
+    返回 "<footer>© 2026 奇语 Qi · MIT License · <a href=\"/\">qilang-project.github.io</a></footer>";
+}
+
+// 组装整页。无侧栏（博客）传空串给 侧栏HTML
+函数 包裹页面(标题: 字符串, 描述: 字符串, 当前: 字符串, 侧栏HTML: 字符串, 正文HTML: 字符串) : 字符串 {
+    变量 主区: 字符串 = "<div class=main>" + 正文HTML + "</div>";
+    变量 内容: 字符串;
+    如果 (字符串::字节长度(侧栏HTML) == 0) {
+        内容 = "<div class=wrap>" + 主区 + "</div>";
+    } 否则 {
+        内容 = "<div class=wrap><aside class=side>" + 侧栏HTML + "</aside>" + 主区 + "</div>";
+    }
+    返回 "<!DOCTYPE html><html lang=zh-CN><head><meta charset=UTF-8>"
+    + "<meta name=viewport content=\"width=device-width,initial-scale=1\">"
+    + "<title>" + 标题 + " — 奇语 Qi</title>"
+    + "<meta name=description content=\"" + 描述 + "\">"
+    + "<link rel=preconnect href=\"https://fonts.googleapis.com\"><link rel=preconnect href=\"https://fonts.gstatic.com\" crossorigin>"
+    + "<link href=\"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Noto+Serif+SC:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono&display=swap\" rel=stylesheet>"
+    + 主题脚本() + 页面CSS() + "</head><body>"
+    + 页头(当前) + 内容 + 页脚() + 切换脚本()
+    + "</body></html>";
+}
+
+// ============================================================
+// 博客
+// ============================================================
+函数 博客首页正文() : 字符串 {
+    返回 "<h1>奇语博客</h1>"
+    + "<p class=lead>关于奇语设计、实现与生态的笔记。</p>"
+    + "<a class=card href=\"/blog/为什么用中文关键字.html\"><div class=t>为什么用中文关键字</div><div class=d>母语编程不是噱头——它降低的是认知负荷。</div><div class=m>2026-05 · 设计</div></a>"
+    + "<a class=card href=\"/blog/qi-web-122k-rps.html\"><div class=t>qi-web 跑到 122k RPS 之路</div><div class=d>从纯 qi 实现到热路径 Rust 化，比 Express 快 5.5 倍。</div><div class=m>2026-05 · 性能</div></a>"
+    + "<a class=card href=\"/blog/编译器友好错误.html\"><div class=t>给编译器一张人话嘴</div><div class=d>把 LALRPOP 的 Debug 转储换成 rustc 风格的行列号 + 提示。</div><div class=m>2026-05 · 工具链</div></a>";
+}
+
+函数 文章_中文关键字() : 字符串 {
+    返回 "<h1>为什么用中文关键字</h1><div class=meta>2026-05 · 设计</div>"
+    + "<p>奇语（Qi）100% 用中文关键字：<code>函数</code> <code>变量</code> <code>如果</code> <code>当</code> <code>返回</code>。常被问的第一个问题是——这是噱头吗？</p>"
+    + "<h2>认知负荷，而非语法糖</h2>"
+    + "<p>对中文母语者，阅读 <code>如果 (年龄 >= 18) { 返回 真; }</code> 不需要把关键字在脑内翻译一遍。代码读起来像它本来描述的逻辑，而不是「英文 + 中文变量名」的混合体。</p>"
+    + "<blockquote>关键字是用得最频繁的词。把这层摩擦去掉，初学者的入门曲线明显变平。</blockquote>"
+    + "<h2>它仍然是真编译语言</h2>"
+    + "<p>中文只在词法层。下面这段经过 LALRPOP 解析 → LLVM IR → 原生机器码，没有解释器：</p>"
+    + "<pre><code>包 主程序;\n导入 标准库.输入输出 作为 IO;\n\n函数 斐波那契(n: 整数) : 整数 {\n    如果 (n &lt; 2) { 返回 n; }\n    返回 斐波那契(n - 1) + 斐波那契(n - 2);\n}\n\n函数 入口() {\n    IO.打印行(\"fib(10) = \" + 整数转字符串(斐波那契(10)));\n}</code></pre>"
+    + "<h2>代价：解析器的取舍</h2>"
+    + "<p>中文标识符和中文关键字共享字符空间，带来一些 LALR(1) 上的纠结——比如 <code>结果</code> <code>类型</code> 是保留字，暂时不能直接当变量名（泛型 <code>结果&lt;T,E&gt;</code> 的 <code>&lt;</code> 歧义）。我们选择诚实地把这些列成「保留字地雷」，而不是假装没有。</p>"
+    + "<p><a href=\"/docs/\">→ 读文档开始写奇语</a></p>";
+}
+
+函数 文章_性能() : 字符串 {
+    返回 "<h1>qi-web 跑到 122k RPS 之路</h1><div class=meta>2026-05 · 性能</div>"
+    + "<p>qi-web 是用奇语写的 Web 框架，风格像 Express / Fiber。一开始纯 qi 实现，吞吐一般；通过把热路径 Rust 化，最终实测 <strong>~122k RPS</strong>——比 Express 快约 5.5 倍，比 Node.js 快约 25%。</p>"
+    + "<h2>瓶颈在哪</h2>"
+    + "<ul><li><strong>GC 全局锁</strong>：<code>Mutex&lt;RuntimeEnvironment&gt;</code> 是真正的 hot path 杀手，换成 <code>RwLock</code> + 原子计数后明显改善。</li>"
+    + "<li><strong>请求解析</strong>：把字符串切分密集的解析下沉到 Rust。</li>"
+    + "<li><strong>路由匹配</strong>：用 Rust 侧的 trie 镜像，qi 层只做注册。</li></ul>"
+    + "<h2>最小服务器长这样</h2>"
+    + "<pre><code>包 主程序;\n导入 Web::{应用, 上下文, 响应, 创建应用, 配置, 获取, 文本, 运行应用};\n\n函数 处理(上下文值: 上下文) : 响应 {\n    返回 文本(\"ok\");\n}\n\n函数 入口() {\n    变量 应用值: 应用 = 创建应用();\n    应用值 = 配置(应用值, \"127.0.0.1\", 6790);\n    应用值 = 获取(应用值, \"/\", 处理);\n    运行应用(应用值);\n}</code></pre>"
+    + "<blockquote>性能不是吹的——基准用 wrk -t4 -c100 -d10s 实测。</blockquote>";
+}
+
+函数 文章_错误() : 字符串 {
+    返回 "<h1>给编译器一张人话嘴</h1><div class=meta>2026-05 · 工具链</div>"
+    + "<p>早期奇语的语法错误长这样：</p>"
+    + "<pre><code>解析错误: General(\"UnrecognizedToken { token: (3206,\n  Token(110, \\\"结果\\\"), 3212), expected: [...] }\")</code></pre>"
+    + "<p>没行号、没源码、看不懂。现在换成 rustc 风格：</p>"
+    + "<pre><code>语法错误：意外的标记 `结果`\n  --&gt; 第 3 行第 8 列\n   3 |     变量 结果: 整数 = 1;\n                ^^^^^^\n  期望：&lt;标识符&gt; / 长度\n  提示：`结果` 是 qi 的保留字，不能作为标识符名。换个别名（如 `结果值`）</code></pre>"
+    + "<h2>关键改动</h2>"
+    + "<ul><li>把 LALRPOP 的 <code>ParseError</code> 翻译成带 1-based 行/列的友好消息</li>"
+    + "<li>源码行 + caret 高亮出错位置</li>"
+    + "<li>智能提示：期望 <code>;</code> → 「上一行可能漏写分号」；token 是保留字 → 「换个别名」</li></ul>"
+    + "<p>错误信息的质量，往往决定一门新语言「能不能用得下去」。</p>";
+}
+
+// ============================================================
+// 文档
+// ============================================================
+函数 文档侧栏(当前: 字符串) : 字符串 {
+    返回 "<h4>开始</h4>"
+    + 侧栏链接(当前, "index", "/docs/", "简介")
+    + 侧栏链接(当前, "install", "/docs/安装.html", "安装")
+    + 侧栏链接(当前, "first", "/docs/第一个程序.html", "第一个程序")
+    + "<h4>语言</h4>"
+    + 侧栏链接(当前, "syntax", "/docs/基础语法.html", "基础语法")
+    + 侧栏链接(当前, "async", "/docs/异步.html", "异步与协程")
+    + "<h4>生态</h4>"
+    + 侧栏链接(当前, "stdlib", "/docs/标准库.html", "标准库")
+    + 侧栏链接(当前, "frameworks", "/docs/框架.html", "Web / CLI / Agent");
+}
+
+函数 侧栏链接(当前: 字符串, 键: 字符串, 网址: 字符串, 文字: 字符串) : 字符串 {
+    变量 类名: 字符串 = "";
+    如果 (字符串::等于(当前, 键) == 1) { 类名 = " class=on"; }
+    返回 "<a" + 类名 + " href=\"" + 网址 + "\">" + 文字 + "</a>";
+}
+
+函数 文档_简介() : 字符串 {
+    返回 "<h1>奇语 Qi 文档</h1>"
+    + "<p class=lead>100% 中文关键字、编译到原生机器码的系统级编程语言。</p>"
+    + "<p>奇语基于 LLVM 生成原生可执行文件，内置 Go 式 M:N 协程异步运行时，配套编译器、Web 框架、CLI 框架、LLM Agent 框架、语言服务器与完整工具链。</p>"
+    + "<h2>三十秒上手</h2>"
+    + "<pre><code>curl -fsSL https://raw.githubusercontent.com/qilang-project/qi/main/scripts/install.sh | bash</code></pre>"
+    + "<pre><code>包 主程序;\n导入 标准库.输入输出 作为 IO;\n函数 入口() { IO.打印行(\"你好，奇语！\"); }</code></pre>"
+    + "<pre><code>qi run 你好.qi</code></pre>"
+    + "<p>从左侧目录开始：<a href=\"/docs/安装.html\">安装</a> · <a href=\"/docs/第一个程序.html\">第一个程序</a> · <a href=\"/docs/基础语法.html\">基础语法</a>。</p>";
+}
+
+函数 文档_安装() : 字符串 {
+    返回 "<h1>安装</h1>"
+    + "<h2>一键脚本（macOS / Linux）</h2>"
+    + "<pre><code>curl -fsSL https://raw.githubusercontent.com/qilang-project/qi/main/scripts/install.sh | bash</code></pre>"
+    + "<p>脚本自动探测平台（macos-arm64 / macos-x64 / linux-x64），从 GitHub Releases 拉预编译二进制，装到 <code>/usr/local/bin</code>（无权限自动降级到 <code>$HOME/.local/bin</code>）。</p>"
+    + "<h2>从源码构建</h2>"
+    + "<p>需要 Rust 1.75+、LLVM 15、Clang。</p>"
+    + "<pre><code>git clone https://github.com/qilang-project/qi.git\ncd qi\ncargo build --release\n# 二进制在 ./target/release/qi</code></pre>"
+    + "<table><tr><th>平台</th><th>装 LLVM 15</th></tr>"
+    + "<tr><td>Linux</td><td><code>wget https://apt.llvm.org/llvm.sh &amp;&amp; sudo ./llvm.sh 15</code></td></tr>"
+    + "<tr><td>macOS</td><td><code>brew install llvm@15</code></td></tr></table>";
+}
+
+函数 文档_第一个程序() : 字符串 {
+    返回 "<h1>第一个程序</h1>"
+    + "<p>每个奇语程序都以包声明开头，入口函数叫 <code>入口</code>。</p>"
+    + "<pre><code>包 主程序;\n导入 标准库.输入输出 作为 IO;\n\n函数 入口() {\n    IO.打印行(\"你好，奇语！\");\n}</code></pre>"
+    + "<h2>运行</h2>"
+    + "<pre><code>qi run 你好.qi      # 编译并运行\nqi check 你好.qi    # 只检查语法\nqi compile 你好.qi -o 你好   # 编译成原生可执行文件</code></pre>"
+    + "<blockquote>提示：用 <code>IO.打印行</code> 而不是 <code>打印</code>；端口示例用随机高位端口（3076 / 6759），别用 8080。</blockquote>";
+}
+
+函数 文档_基础语法() : 字符串 {
+    返回 "<h1>基础语法</h1>"
+    + "<h2>变量与类型</h2>"
+    + "<pre><code>变量 名字 = \"奇语\";          // 类型推断\n变量 年龄: 整数 = 10;         // 显式类型\n常量 PI = 3.14159;            // 常量</code></pre>"
+    + "<table><tr><th>类型</th><th>LLVM</th></tr>"
+    + "<tr><td>整数</td><td>i64（默认 64 位）</td></tr>"
+    + "<tr><td>浮点数</td><td>double</td></tr>"
+    + "<tr><td>布尔</td><td>i1（真 / 假）</td></tr>"
+    + "<tr><td>字符串</td><td>UTF-8</td></tr></table>"
+    + "<h2>函数</h2>"
+    + "<pre><code>函数 加法(x: 整数, y: 整数) : 整数 {\n    返回 x + y;\n}</code></pre>"
+    + "<h2>控制流</h2>"
+    + "<pre><code>如果 (x > 10) { IO.打印行(\"大\"); } 否则 { IO.打印行(\"小\"); }\n当 (计数 < 5) { 计数 = 计数 + 1; }\n对于 i 在 0..10 { IO.打印(i); }</code></pre>"
+    + "<h2>结构体与方法（Go 风格）</h2>"
+    + "<pre><code>类型 点 { x: 浮点数, y: 浮点数 }\n\n函数 (自己 点) 模长() : 浮点数 {\n    返回 自己.x * 自己.x + 自己.y * 自己.y;\n}</code></pre>"
+    + "<h2>保留字地雷</h2>"
+    + "<p>这些是关键字，<strong>不能</strong>当变量名：<code>结果</code> <code>类型</code> <code>选项</code> <code>通道</code> <code>尝试</code> <code>返回</code> <code>等待</code> <code>异步</code> …。改用别名如 <code>结果值</code> <code>类型名</code>。</p>";
+}
+
+函数 文档_异步() : 字符串 {
+    返回 "<h1>异步与协程</h1>"
+    + "<p>奇语用 <code>未来&lt;T&gt;</code> 类型 + <code>等待</code> 表达式做异步，底层是 Go 式 M:N 协程调度器（work-stealing）。</p>"
+    + "<pre><code>函数 异步计算(值: 整数) : 未来&lt;整数&gt; {\n    返回 值 * 2;   // 自动包装成 Future\n}\n\n函数 入口() {\n    变量 结果值: 整数 = 等待 异步计算(21);\n    IO.打印行(整数转字符串(结果值));   // 42\n}</code></pre>"
+    + "<h2>支持的 Future 类型</h2>"
+    + "<ul><li><code>未来&lt;整数&gt;</code> / <code>未来&lt;浮点数&gt;</code> / <code>未来&lt;布尔&gt;</code> / <code>未来&lt;字符串&gt;</code></li></ul>"
+    + "<h2>协程与通道</h2>"
+    + "<pre><code>变量 信道 = 通道&lt;整数&gt;();\n启动 发送者(信道);\n变量 值 = &lt;- 信道;</code></pre>"
+    + "<blockquote>注意：完整 async/await 状态机 codegen 约覆盖 70%，复杂控制流内嵌 await 会退化到同步包装。</blockquote>";
+}
+
+函数 文档_标准库() : 字符串 {
+    返回 "<h1>标准库</h1>"
+    + "<p>25+ 模块，用 <code>导入 标准库.X</code> 引入，<code>.</code> 调用（也支持 <code>::</code> 静态形式）。</p>"
+    + "<table><tr><th>模块</th><th>用途</th></tr>"
+    + "<tr><td>输入输出</td><td>打印、文件读写</td></tr>"
+    + "<tr><td>字符串</td><td>查找/子串/替换/分割（也叫 文本）</td></tr>"
+    + "<tr><td>HTTP</td><td>HTTP 客户端 / 服务端</td></tr>"
+    + "<tr><td>JSON</td><td>对象/数组构建与序列化</td></tr>"
+    + "<tr><td>网络</td><td>TCP / UDP</td></tr>"
+    + "<tr><td>加密</td><td>MD5 / SHA256 / Base64 / HMAC</td></tr>"
+    + "<tr><td>大模型</td><td>OpenAI 兼容 LLM 调用</td></tr>"
+    + "<tr><td>操作系统</td><td>环境变量、系统信息</td></tr></table>"
+    + "<h2>FFI 返回值约定</h2>"
+    + "<blockquote>易踩坑：<code>读取文件</code> 失败返回空串（不是 NULL），用 <code>字符串::字节长度(x)==0</code> 判断；<code>写入文件</code> 返回 1=成功。</blockquote>";
+}
+
+函数 文档_框架() : 字符串 {
+    返回 "<h1>Web / CLI / Agent 框架</h1>"
+    + "<p>奇语自带三个用奇语写的框架，各有配套 SKILL.md（AI agent 技能）。</p>"
+    + "<h2>qi-web — Web 框架</h2>"
+    + "<p>Express / Fiber 风格，实测 ~122k RPS。路由 <code>获取/提交/整体更新/删除</code>、中间件、路由组、会话。</p>"
+    + "<h2>qi-cli — 命令行框架</h2>"
+    + "<p>Cobra 风格命令树、子命令、持久参数、执行钩子、自动帮助。</p>"
+    + "<h2>qi-harness — LLM Agent 框架</h2>"
+    + "<p>一行 <code>大模型(端点, 密钥, 模型)</code> 配置，自动工具派发循环（并行 tool_calls）、流式、追踪、重试。</p>"
+    + "<pre><code>导入 Harness::{大模型, 配置系统提示, 开启会话, 创建代理, 简单问, 关闭代理};\n变量 配置 = 大模型(\"https://api.deepseek.com\", 密钥, \"deepseek-chat\");\n变量 会话 = 开启会话(配置);\n变量 代理值 = 创建代理(\"助手\", 会话);\nIO.打印行(简单问(代理值, \"用一句话介绍奇语\"));</code></pre>";
+}
+
+// ============================================================
+// 主入口：生成全部文件
+// ============================================================
+函数 写文件(路径: 字符串, 内容: 字符串) {
+    变量 状态: 整数 = IO::写入文件(路径, 内容);
+    如果 (状态 == 1) {
+        IO.打印行("  ✓ " + 路径);
+    } 否则 {
+        IO.打印行("  ✗ 写入失败: " + 路径);
+    }
+}
+
+函数 入口() {
+    IO.打印行("生成奇语站点...");
+    IO::创建目录("../blog");
+    IO::创建目录("../docs");
+
+    变量 空侧栏: 字符串 = "";
+
+    // --- 博客 ---
+    写文件("../blog/index.html",
+        包裹页面("博客", "奇语设计与实现笔记", "blog", 空侧栏, 博客首页正文()));
+    写文件("../blog/为什么用中文关键字.html",
+        包裹页面("为什么用中文关键字", "母语编程降低认知负荷", "blog", 空侧栏, 文章_中文关键字()));
+    写文件("../blog/qi-web-122k-rps.html",
+        包裹页面("qi-web 122k RPS 之路", "热路径 Rust 化性能优化", "blog", 空侧栏, 文章_性能()));
+    写文件("../blog/编译器友好错误.html",
+        包裹页面("给编译器一张人话嘴", "rustc 风格错误信息", "blog", 空侧栏, 文章_错误()));
+
+    // --- 文档 ---
+    写文件("../docs/index.html",
+        包裹页面("文档", "奇语 Qi 官方文档", "docs", 文档侧栏("index"), 文档_简介()));
+    写文件("../docs/安装.html",
+        包裹页面("安装", "安装奇语编译器", "docs", 文档侧栏("install"), 文档_安装()));
+    写文件("../docs/第一个程序.html",
+        包裹页面("第一个程序", "你好世界", "docs", 文档侧栏("first"), 文档_第一个程序()));
+    写文件("../docs/基础语法.html",
+        包裹页面("基础语法", "变量/类型/函数/控制流", "docs", 文档侧栏("syntax"), 文档_基础语法()));
+    写文件("../docs/异步.html",
+        包裹页面("异步与协程", "未来/等待/通道", "docs", 文档侧栏("async"), 文档_异步()));
+    写文件("../docs/标准库.html",
+        包裹页面("标准库", "25+ 标准库模块", "docs", 文档侧栏("stdlib"), 文档_标准库()));
+    写文件("../docs/框架.html",
+        包裹页面("框架", "qi-web / qi-cli / qi-harness", "docs", 文档侧栏("frameworks"), 文档_框架()));
+
+    IO.打印行("完成。");
+}
