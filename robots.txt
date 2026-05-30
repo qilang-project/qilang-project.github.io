@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# GEO: 给 AI / LLM 引擎的纯文本摘要 llms.txt
+Sitemap: https://qilang-project.github.io/sitemap.xml

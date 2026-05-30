@@ -525,6 +525,54 @@
 }
 
 // ============================================================
+// SEO / GEO：robots.txt + sitemap.xml
+// ============================================================
+函数 站点() : 字符串 { 返回 "https://qilang-project.github.io"; }
+
+函数 生成robots() : 字符串 {
+    返回 "User-agent: *\n"
+    + "Allow: /\n\n"
+    + "# GEO: 给 AI / LLM 引擎的纯文本摘要 llms.txt\n"
+    + "Sitemap: " + 站点() + "/sitemap.xml\n";
+}
+
+函数 网址条目(路径: 字符串) : 字符串 {
+    返回 "  <url><loc>" + 站点() + 路径 + "</loc></url>\n";
+}
+
+函数 生成sitemap() : 字符串 {
+    返回 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    + "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
+    + 网址条目("/")
+    + 网址条目("/blog/")
+    + 网址条目("/blog/为什么用中文关键字.html")
+    + 网址条目("/blog/qi-web-122k-rps.html")
+    + 网址条目("/blog/编译器友好错误.html")
+    + 网址条目("/docs/")
+    + 网址条目("/docs/安装.html")
+    + 网址条目("/docs/第一个程序.html")
+    + 网址条目("/docs/基础语法.html")
+    + 网址条目("/docs/函数与方法.html")
+    + 网址条目("/docs/控制流.html")
+    + 网址条目("/docs/结构体与枚举.html")
+    + 网址条目("/docs/错误处理.html")
+    + 网址条目("/docs/异步.html")
+    + 网址条目("/docs/包与模块.html")
+    + 网址条目("/docs/标准库.html")
+    + 网址条目("/docs/输入输出.html")
+    + 网址条目("/docs/字符串.html")
+    + 网址条目("/docs/JSON.html")
+    + 网址条目("/docs/网络.html")
+    + 网址条目("/docs/大模型.html")
+    + 网址条目("/docs/框架.html")
+    + 网址条目("/docs/命令行工具.html")
+    + 网址条目("/docs/保留字.html")
+    + 网址条目("/docs/常见问题.html")
+    + 网址条目("/docs/给AI.html")
+    + "</urlset>\n";
+}
+
+// ============================================================
 // 主入口
 // ============================================================
 函数 写文件(路径: 字符串, 内容: 字符串) {
@@ -575,6 +623,8 @@
 
     // 给模型 / 爬虫的纯文本摘要（站点根）
     写文件("../llms.txt", LLMS文本());
+    写文件("../robots.txt", 生成robots());
+    写文件("../sitemap.xml", 生成sitemap());
 
     IO.打印行("完成。");
 }
