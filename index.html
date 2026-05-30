@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奇语 Qi — 100% 中文关键字的系统级编程语言</title>
+<meta name="description" content="奇语（Qi）是一门 100% 中文关键字、编译到原生机器码的现代系统级编程语言。LLVM 代码生成、M:N 协程异步运行时、完整工具链与标准库。">
+<style>
+  :root {
+    /* ---- dark (default) ---- */
+    --ink: #14110f;
+    --ink-2: #1c1916;
+    --ink-3: #26211d;
+    --paper: #f4efe6;
+    --paper-dim: #b8af9f;
+    --cinnabar: #d6442f;
+    --cinnabar-soft: #e8674f;
+    --jade: #5cb494;
+    --gold: #d4ac57;
+    --line: rgba(244, 239, 230, 0.10);
+    --surface-hi: rgba(244, 239, 230, 0.04);
+    --nav-bg: rgba(20, 17, 15, 0.72);
+    --watermark: rgba(214, 68, 47, 0.055);
+    /* fixed: text that always sits on the cinnabar accent — never theme-flips */
+    --on-cinnabar: #fdf2ee;
+    /* fixed: the "inverse chip" used by the GitHub CTA */
+    --chip-bg: #f4efe6;
+    --chip-fg: #14110f;
+    /* code surface stays dark in both themes for readable syntax highlighting */
+    --code-bg: #1c1916;
+    --code-fg: #f4efe6;
+    --code-line: rgba(244, 239, 230, 0.10);
+    --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    --display: "Fraunces", "Noto Serif SC", Georgia, "Songti SC", serif;
+    --mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
+    --sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
+  }
+
+  [data-theme="light"] {
+    --ink: #f5efe3;          /* warm rice paper */
+    --ink-2: #fffdf7;
+    --ink-3: #ece4d4;
+    --paper: #221c17;        /* sumi ink */
+    --paper-dim: #6e6457;
+    --cinnabar: #c0392a;
+    --cinnabar-soft: #d2543f;
+    --jade: #2f7d60;
+    --gold: #9a7a2c;
+    --line: rgba(34, 28, 23, 0.13);
+    --surface-hi: rgba(34, 28, 23, 0.03);
+    --nav-bg: rgba(245, 239, 227, 0.82);
+    --watermark: rgba(192, 57, 42, 0.07);
+    --on-cinnabar: #fdf2ee;  /* stays light → red bg always gets light text */
+    --chip-bg: #221c17;      /* dark ink chip on paper */
+    --chip-fg: #f5efe3;
+    --shadow: 0 22px 50px rgba(96, 70, 40, 0.16);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--cinnabar); color: var(--on-cinnabar); }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- nav ---------- */
+  body, .stat, .feat, .eco-card, nav, section { transition: background .35s ease, color .35s ease, border-color .35s ease; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(14px);
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 19px; letter-spacing: 0.5px; }
+  .brand .seal {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: grid; place-items: center;
+    background: var(--cinnabar); color: var(--on-cinnabar);
+    font-family: var(--display); font-size: 23px; font-weight: 800;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), 0 6px 18px rgba(214,68,47,0.32);
+  }
+  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 14.5px; }
+  .nav-links a { color: var(--paper-dim); transition: color .2s; }
+  .nav-links a:hover { color: var(--paper); }
+  .nav-cta {
+    background: var(--chip-bg); color: var(--chip-fg) !important;
+    padding: 8px 16px; border-radius: 8px; font-weight: 700;
+    transition: transform .15s, box-shadow .2s;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.28); }
+  .theme-toggle {
+    width: 38px; height: 38px; border-radius: 9px; cursor: pointer;
+    display: grid; place-items: center; font-size: 17px; line-height: 1;
+    background: transparent; border: 1px solid var(--line); color: var(--paper);
+    transition: border-color .2s, transform .15s, background .2s;
+  }
+  .theme-toggle:hover { border-color: var(--paper-dim); transform: translateY(-1px); }
+  .theme-toggle .sun { display: none; }
+  [data-theme="light"] .theme-toggle .sun { display: block; }
+  [data-theme="light"] .theme-toggle .moon { display: none; }
+  @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; padding: 110px 0 90px; overflow: hidden; }
+  .hero-mark {
+    position: absolute; right: -4%; top: -8%;
+    font-family: var(--display); font-size: 46vw; font-weight: 800; line-height: 1;
+    color: var(--watermark);
+    pointer-events: none; z-index: 0; user-select: none; will-change: transform;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--gold); font-weight: 600; margin-bottom: 22px;
+    border: 1px solid rgba(201,161,74,0.3); padding: 6px 14px; border-radius: 999px;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--jade); box-shadow: 0 0 8px var(--jade); }
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(40px, 6.6vw, 82px); line-height: 1.02;
+    font-weight: 800; letter-spacing: -1.5px; margin-bottom: 24px;
+  }
+  h1 .accent { color: var(--cinnabar); font-style: italic; }
+  .lede { font-size: clamp(17px, 2.2vw, 21px); color: var(--paper-dim); max-width: 640px; margin-bottom: 38px; }
+  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 26px; border-radius: 10px; font-weight: 600; font-size: 15.5px;
+    transition: transform .15s, box-shadow .2s, background .2s;
+  }
+  .btn-primary { background: var(--cinnabar); color: var(--on-cinnabar); box-shadow: 0 10px 30px rgba(214,68,47,.3); }
+  .btn-primary:hover { transform: translateY(-2px); background: var(--cinnabar-soft); box-shadow: 0 14px 38px rgba(214,68,47,.42); }
+  .btn-ghost { border: 1px solid var(--line); color: var(--paper); }
+  .btn-ghost:hover { border-color: var(--paper-dim); transform: translateY(-2px); }
+
+  .install {
+    margin-top: 40px; display: inline-flex; align-items: center; gap: 14px;
+    background: var(--code-bg); border: 1px solid var(--code-line);
+    border-radius: 12px; padding: 14px 18px; font-family: var(--mono); font-size: 14px;
+    max-width: 100%; overflow-x: auto;
+  }
+  .install .pfx { color: var(--jade); }
+  .install code { color: var(--code-fg); white-space: nowrap; }
+  .copy-btn {
+    margin-left: auto; padding-left: 14px; cursor: pointer; color: #b3a99a;
+    border-left: 1px solid var(--code-line); background: none; font-family: var(--sans);
+    font-size: 13px; white-space: nowrap;
+  }
+  .copy-btn:hover { color: var(--code-fg); }
+
+  /* ---------- stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border-radius: 16px; overflow: hidden; margin: 70px 0 0; }
+  .stat { background: var(--ink-2); padding: 28px 24px; text-align: center; }
+  .stat .num { font-family: var(--display); font-size: clamp(30px, 4vw, 44px); font-weight: 800; color: var(--cinnabar); letter-spacing: -1px; }
+  .stat .lbl { font-size: 13.5px; color: var(--paper-dim); margin-top: 6px; }
+  @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---------- section ---------- */
+  section { padding: 96px 0; }
+  .sec-head { margin-bottom: 54px; max-width: 660px; }
+  .sec-tag { font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cinnabar); font-weight: 700; }
+  .sec-head h2 { font-family: var(--display); font-size: clamp(30px, 4.2vw, 46px); font-weight: 800; letter-spacing: -1px; margin: 12px 0 16px; }
+  .sec-head p { color: var(--paper-dim); font-size: 17px; }
+
+  /* ---------- code showcase ---------- */
+  .showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: stretch; }
+  @media (max-width: 860px) { .showcase { grid-template-columns: 1fr; } }
+  .code-card {
+    background: var(--code-bg); color: var(--code-fg);
+    border: 1px solid var(--code-line); border-radius: 14px; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .code-card pre { color: var(--code-fg); }
+  .code-card .bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--code-line); }
+  .code-card .bar .dots { display: flex; gap: 6px; }
+  .code-card .bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+  .code-card .bar .dots i:nth-child(1) { background: #e05c4a; }
+  .code-card .bar .dots i:nth-child(2) { background: var(--gold); }
+  .code-card .bar .dots i:nth-child(3) { background: var(--jade); }
+  .code-card .bar .fname { font-family: var(--mono); font-size: 12.5px; color: var(--paper-dim); margin-left: 6px; }
+  pre { margin: 0; padding: 20px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.7; flex: 1; }
+  code.block { display: block; white-space: pre; }
+  .kw { color: var(--cinnabar-soft); }
+  .ty { color: var(--gold); }
+  .str { color: var(--jade); }
+  .fn { color: #7cb3e8; }
+  .cm { color: #6b6258; font-style: italic; }
+  .num2 { color: #c98bd6; }
+
+  /* ---------- features ---------- */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 860px) { .features { grid-template-columns: 1fr; } }
+  .feat {
+    background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 30px 26px;
+    transition: transform .2s, border-color .2s;
+  }
+  .feat:hover { transform: translateY(-4px); border-color: rgba(214,68,47,.4); }
+  .feat .ico { font-size: 26px; margin-bottom: 16px; }
+  .feat h3 { font-family: var(--display); font-size: 21px; margin-bottom: 10px; font-weight: 600; letter-spacing: -.3px; }
+  .feat p { color: var(--paper-dim); font-size: 14.5px; }
+
+  /* ---------- ecosystem ---------- */
+  .eco { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 980px) { .eco { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .eco { grid-template-columns: 1fr; } }
+  .eco-card {
+    background: linear-gradient(160deg, var(--ink-2), var(--ink-3));
+    border: 1px solid var(--line); border-radius: 14px; padding: 24px 22px;
+    transition: transform .2s, border-color .2s;
+  }
+  .eco-card:hover { transform: translateY(-3px); border-color: var(--line); }
+  .eco-card .name { font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--cinnabar-soft); }
+  .eco-card .role { font-size: 13px; color: var(--gold); margin: 4px 0 12px; }
+  .eco-card p { font-size: 13.5px; color: var(--paper-dim); }
+
+  /* ---------- bottom cta ---------- */
+  .final {
+    text-align: center; padding: 110px 0;
+    background: radial-gradient(circle at 50% 0%, rgba(214,68,47,0.12), transparent 60%);
+  }
+  .final h2 { font-family: var(--display); font-size: clamp(32px, 5vw, 56px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 18px; }
+  .final p { color: var(--paper-dim); font-size: 18px; margin-bottom: 36px; }
+
+  footer { border-top: 1px solid var(--line); padding: 44px 0; color: var(--paper-dim); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
+  footer a { color: var(--paper-dim); transition: color .2s; }
+  footer a:hover { color: var(--paper); }
+  .foot-links { display: flex; gap: 22px; }
+
+  /* Progressive enhancement: only hide pre-animation content once JS confirms
+     GSAP is ready. If the script fails to load, everything stays visible. */
+  .gsap-ready .reveal { opacity: 0; }
+  .gsap-ready .hero-anim { opacity: 0; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Noto+Serif+SC:wght@600;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  // Apply saved/system theme before paint to avoid a flash of the wrong theme.
+  (function () {
+    try {
+      var saved = localStorage.getItem('qi-theme');
+      var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      var theme = saved || (prefersLight ? 'light' : 'dark');
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="seal">奇</span> 奇语 Qi</a>
+    <div class="nav-links">
+      <a href="#why">特性</a>
+      <a href="#code">示例</a>
+      <a href="#eco">生态</a>
+      <a href="#install">安装</a>
+      <a class="nav-cta" href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">GitHub ↗</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="切换深浅色主题" title="切换主题">
+        <span class="moon">🌙</span><span class="sun">☀️</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-mark" aria-hidden="true">奇</div>
+  <div class="wrap">
+    <span class="eyebrow hero-anim"><span class="dot"></span>编译型 · 原生性能 · 100% 中文</span>
+    <h1 class="hero-anim">用<span class="accent">中文</span>写系统级程序，<br>编译成<span class="accent">原生机器码</span>。</h1>
+    <p class="lede hero-anim">
+      奇语（Qi）是一门关键字全中文的现代编程语言。基于 LLVM 生成原生可执行文件，
+      内置 Go 式 M:N 协程异步运行时，配套编译器、Web 框架、语言服务器和命令行工具链。
+    </p>
+    <div class="hero-cta hero-anim">
+      <a class="btn btn-primary" href="#install">立即开始 →</a>
+      <a class="btn btn-ghost" href="#code">看看代码</a>
+    </div>
+    <div class="install hero-anim">
+      <span class="pfx">$</span>
+      <code id="installCmd">curl -fsSL https://raw.githubusercontent.com/qilang-project/qi/main/scripts/install.sh | bash</code>
+      <button class="copy-btn" onclick="copyInstall(this)">复制</button>
+    </div>
+
+    <div class="stats hero-anim">
+      <div class="stat"><div class="num">122k</div><div class="lbl">qi-web RPS<br>(5.5× Express)</div></div>
+      <div class="stat"><div class="num">25+</div><div class="lbl">标准库模块</div></div>
+      <div class="stat"><div class="num">100%</div><div class="lbl">中文关键字</div></div>
+      <div class="stat"><div class="num">M:N</div><div class="lbl">协程调度器</div></div>
+    </div>
+  </div>
+</header>
+
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag">为什么是 Qi</div>
+      <h2>母语般的代码，工业级的运行时</h2>
+      <p>不是语法糖玩具——真编译、真异步、真有标准库。下面这些都已经在跑。</p>
+    </div>
+    <div class="features">
+      <div class="feat reveal">
+        <div class="ico">🀄</div>
+        <h3>全中文语法</h3>
+        <p>关键字、类型、标准库函数全部中文：<code>函数</code> / <code>变量</code> / <code>如果</code> / <code>当</code> / <code>整数</code> / <code>字符串</code>。读起来像伪代码描述。</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico">⚙️</div>
+        <h3>LLVM 原生编译</h3>
+        <p>源码 → LALRPOP 解析 → LLVM IR → 原生可执行文件。没有解释器，没有虚拟机，启动即满速。</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico">🧵</div>
+        <h3>M:N 协程异步</h3>
+        <p>Go 风格 work-stealing 调度器 + <code>未来&lt;T&gt;</code> / <code>等待</code> 语法。轻量协程跑出 12 万 RPS 的 Web 服务。</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico">📦</div>
+        <h3>厚标准库</h3>
+        <p>HTTP、JSON、加密、正则、数据库、网络、文件、操作系统、压缩、大模型、MCP —— 25 个模块开箱即用。</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico">🛠️</div>
+        <h3>完整工具链</h3>
+        <p>编译器、语言服务器（补全/跳转/重命名/折叠）、格式化器、VSCode 扩展、cobra 风格 CLI 框架，全都有。</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ico">🤖</div>
+        <h3>AI 原生</h3>
+        <p>内置大模型与 MCP 接口，qi-harness 框架支持可观测、可重试、可评估的 LLM Agent，已接通 parallel tool-calls 与流式。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="code" style="background: var(--ink-2);">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag">代码长什么样</div>
+      <h2>一眼就懂</h2>
+      <p>左边是「你好世界 + 控制流」，右边是「异步并发 + Web 服务」。</p>
+    </div>
+    <div class="showcase">
+      <div class="code-card reveal">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span class="fname">你好.qi</span></div>
+<pre><code class="block"><span class="cm">// 你好世界 + 基础控制流</span>
+<span class="kw">包</span> 主程序;
+<span class="kw">导入</span> 标准库.输入输出 <span class="kw">作为</span> IO;
+
+<span class="kw">函数</span> <span class="fn">问候</span>(名字: <span class="ty">字符串</span>) : <span class="ty">字符串</span> {
+    <span class="kw">返回</span> <span class="str">"你好，"</span> + 名字 + <span class="str">"！"</span>;
+}
+
+<span class="kw">函数</span> <span class="fn">入口</span>() {
+    <span class="kw">变量</span> 名单: <span class="ty">字符串</span> = <span class="str">"小李"</span>;
+    <span class="kw">如果</span> (字符串::字节长度(名单) &gt; <span class="num2">0</span>) {
+        IO.打印行(<span class="fn">问候</span>(名单));
+    } <span class="kw">否则</span> {
+        IO.打印行(<span class="str">"世界，你好"</span>);
+    }
+
+    <span class="kw">变量</span> 计: <span class="ty">整数</span> = <span class="num2">0</span>;
+    <span class="kw">当</span> (计 &lt; <span class="num2">3</span>) {
+        IO.打印行(<span class="str">"第 "</span> + 整数转字符串(计));
+        计 = 计 + <span class="num2">1</span>;
+    }
+}</code></pre>
+      </div>
+      <div class="code-card reveal">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span class="fname">服务.qi</span></div>
+<pre><code class="block"><span class="cm">// 异步函数 + 12 万 RPS Web 服务</span>
+<span class="kw">包</span> 主程序;
+<span class="kw">导入</span> Web::{ 创建应用, 启动 };
+
+<span class="kw">函数</span> <span class="fn">慢查询</span>(编号: <span class="ty">整数</span>) : <span class="ty">未来</span>&lt;<span class="ty">整数</span>&gt; {
+    <span class="kw">返回</span> 编号 * <span class="num2">2</span>;
+}
+
+<span class="kw">函数</span> <span class="fn">处理</span>(请求: <span class="ty">请求</span>, 响应: <span class="ty">响应</span>) {
+    <span class="kw">变量</span> 值: <span class="ty">整数</span> = <span class="kw">等待</span> <span class="fn">慢查询</span>(<span class="num2">21</span>);
+    响应.JSON(<span class="str">"{\"结果\": "</span> + 整数转字符串(值) + <span class="str">"}"</span>);
+}
+
+<span class="kw">函数</span> <span class="fn">入口</span>() {
+    <span class="kw">变量</span> 应用 = <span class="fn">创建应用</span>();
+    应用.获取(<span class="str">"/"</span>, <span class="fn">处理</span>);
+    <span class="fn">启动</span>(应用, <span class="num2">3076</span>);  <span class="cm">// 随机高位端口</span>
+}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="eco">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag">生态系统</div>
+      <h2>一个 monorepo，全套配齐</h2>
+      <p>编译器到 IDE 集成，Web 框架到 AI Agent，都在同一个 Cargo workspace 里。</p>
+    </div>
+    <div class="eco">
+      <div class="eco-card reveal"><div class="name">qi</div><div class="role">编译器 · Rust</div><p>LLVM 后端、中文词法/语法、M:N 异步运行时、GC。核心 7 万行。</p></div>
+      <div class="eco-card reveal"><div class="name">qi-web</div><div class="role">Web 框架 · Qi</div><p>Express / Fiber 风格。122k RPS，比 Express 快 5.5 倍、比 Node 快 25%。</p></div>
+      <div class="eco-card reveal"><div class="name">qi-cli</div><div class="role">CLI 框架 · Qi</div><p>cobra 风格命令树、子命令、持久参数、执行钩子、自动帮助。</p></div>
+      <div class="eco-card reveal"><div class="name">qi-harness</div><div class="role">AI Agent · Qi</div><p>可观测 / 可重试 / 可评估的 LLM Agent 框架，支持流式与并行工具调用。</p></div>
+      <div class="eco-card reveal"><div class="name">qi-lsp</div><div class="role">语言服务器 · Rust</div><p>补全、跳转、引用、重命名、格式化、折叠、语义高亮，CJK 全支持。</p></div>
+      <div class="eco-card reveal"><div class="name">qi-tools</div><div class="role">工具集 · Rust</div><p>qifmt 代码格式化器，被 LSP 复用，统一代码风格。</p></div>
+      <div class="eco-card reveal"><div class="name">qi-gui</div><div class="role">图形库 · Rust</div><p>基于 Tao + Skia 的跨平台窗口与 2D 渲染，静态链接进编译产物。</p></div>
+      <div class="eco-card reveal"><div class="name">qi-vscode</div><div class="role">编辑器扩展 · TS</div><p>语法高亮、代码片段、LSP 客户端、Qi 专属主题。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="install" style="background: var(--ink-2);">
+  <div class="wrap">
+    <div class="sec-head reveal" style="max-width: 760px;">
+      <div class="sec-tag">三十秒上手</div>
+      <h2>装上，写第一个程序</h2>
+      <p>macOS / Linux 一行脚本安装，或从源码用 Cargo 构建（需要 LLVM 15）。</p>
+    </div>
+    <div class="showcase">
+      <div class="code-card reveal">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span class="fname">安装</span></div>
+<pre><code class="block"><span class="cm"># 一键脚本（预编译二进制）</span>
+<span class="str">curl</span> -fsSL https://raw.githubusercontent.com/\
+qilang-project/qi/main/scripts/install.sh | bash
+
+<span class="cm"># 或从源码构建</span>
+<span class="str">git</span> clone https://github.com/qilang-project/qi
+<span class="str">cd</span> qi-compiler && <span class="str">cargo</span> build --release</code></pre>
+      </div>
+      <div class="code-card reveal">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span class="fname">运行</span></div>
+<pre><code class="block"><span class="cm"># 写一个文件</span>
+<span class="kw">包</span> 主程序;
+<span class="kw">导入</span> 标准库.输入输出 <span class="kw">作为</span> IO;
+<span class="kw">函数</span> <span class="fn">入口</span>() { IO.打印行(<span class="str">"你好 Qi"</span>); }
+
+<span class="cm"># 编译并运行</span>
+<span class="str">$</span> qi run 你好.qi
+<span class="jade">你好 Qi</span>
+
+<span class="cm"># 只检查语法</span>
+<span class="str">$</span> qi check 你好.qi</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>奇思妙想，从一行中文开始。</h2>
+    <p>用你最熟悉的语言，构建快、可靠、能上线的软件。</p>
+    <div class="hero-cta" style="justify-content: center;">
+      <a class="btn btn-primary" href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">前往 GitHub →</a>
+      <a class="btn btn-ghost" href="#code">浏览示例</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 奇语 Qi Language · MIT License</div>
+    <div class="foot-links">
+      <a href="#why">特性</a>
+      <a href="#eco">生态</a>
+      <a href="#install">安装</a>
+      <a href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<!-- GSAP + ScrollTrigger (official animation engine; see greensock/gsap-skills) -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+  // ---- theme toggle ----
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      document.documentElement.removeAttribute('data-theme');
+      try { localStorage.setItem('qi-theme', 'dark'); } catch (e) {}
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      try { localStorage.setItem('qi-theme', 'light'); } catch (e) {}
+    }
+  });
+
+  // ---- copy install command ----
+  function copyInstall(btn) {
+    const txt = document.getElementById('installCmd').textContent;
+    navigator.clipboard.writeText(txt).then(() => {
+      const old = btn.textContent;
+      btn.textContent = '已复制 ✓';
+      setTimeout(() => btn.textContent = old, 1600);
+    });
+  }
+
+  // ---- animations (GSAP) ----
+  // Progressive enhancement: only hide-then-reveal when GSAP actually loaded.
+  if (window.gsap) {
+    gsap.registerPlugin(ScrollTrigger);
+    document.documentElement.classList.add('gsap-ready');
+
+    // gsap.matchMedia drives prefers-reduced-motion: motion users get the full
+    // choreography; reduced-motion users get instant, no-transform reveals.
+    const mm = gsap.matchMedia();
+
+    mm.add(
+      {
+        motion: '(prefers-reduced-motion: no-preference)',
+        reduce: '(prefers-reduced-motion: reduce)',
+      },
+      (ctx) => {
+        const { motion } = ctx.conditions;
+        const dur = motion ? 0.9 : 0;
+        const y = motion ? 26 : 0;
+        const ease = 'power3.out';
+
+        // Hero load timeline — staggered entrance, one orchestrated moment.
+        // CSS already hid .hero-anim (opacity 0) once .gsap-ready was added, so we
+        // animate *to* the visible state with .to() (a .from() would read the
+        // CSS-forced opacity:0 as the "natural" value and animate 0→0).
+        gsap.set('.hero-anim', { y });
+        gsap.to('.hero-anim', {
+          opacity: 1, y: 0, duration: dur, ease,
+          stagger: motion ? 0.12 : 0,
+          onComplete: () => gsap.set('.hero-anim', { clearProps: 'transform' }),
+        });
+
+        // Watermark parallax (motion only) — drifts the giant 奇 as you scroll.
+        if (motion) {
+          gsap.to('.hero-mark', {
+            yPercent: 18, xPercent: 6, ease: 'none',
+            scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 },
+          });
+        }
+
+        // Scroll reveals, batched so elements entering together animate together.
+        gsap.set('.reveal', { opacity: 0, y });
+        ScrollTrigger.batch('.reveal', {
+          start: 'top 86%',
+          once: true,
+          onEnter: (els) =>
+            gsap.to(els, {
+              opacity: 1, y: 0, duration: dur, ease,
+              stagger: motion ? 0.09 : 0,
+              overwrite: true,
+              onComplete: () => gsap.set(els, { clearProps: 'transform' }),
+            }),
+        });
+
+        return () => {}; // matchMedia auto-reverts on query change
+      }
+    );
+  }
+</script>
+</body>
+</html>
