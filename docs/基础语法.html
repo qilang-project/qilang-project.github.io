@@ -1,7 +1,60 @@
-<!DOCTYPE html><html lang=zh-CN><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>变量与类型 — 奇语 Qi</title><meta name=description content="变量/类型/运算符/数组"><link rel=preconnect href="https://fonts.googleapis.com"><link rel=preconnect href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Noto+Serif+SC:wght@700;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono&display=swap" rel=stylesheet><script>(function(){try{var s=localStorage.getItem('qi-theme');var l=matchMedia('(prefers-color-scheme: light)').matches;if(s==='light'||(!s&&l))document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script><style>:root{--ink:#14110f;--ink2:#1c1916;--paper:#f4efe6;--dim:#b8af9f;--red:#d6442f;--red2:#e8674f;--gold:#d4ac57;--jade:#5cb494;--line:rgba(244,239,230,.10);--code:#1c1916;--codefg:#f4efe6;--display:'Fraunces','Noto Serif SC',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif;}[data-theme=light]{--ink:#f5efe3;--ink2:#fffdf7;--paper:#221c17;--dim:#6e6457;--red:#c0392a;--red2:#d2543f;--gold:#9a7a2c;--jade:#2f7d60;--line:rgba(34,28,23,.13);}*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--ink);color:var(--paper);font-family:var(--sans);line-height:1.75;-webkit-font-smoothing:antialiased}::selection{background:var(--red);color:#fdf2ee}a{color:var(--red2);text-decoration:none}a:hover{text-decoration:underline}nav{position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);background:var(--ink2);border-bottom:1px solid var(--line)}nav .in{max-width:1140px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:24px}.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}.seal{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:var(--red);color:#fdf2ee;font-family:var(--display);font-weight:800;font-size:20px}nav a.nl{color:var(--dim);font-size:14.5px}nav a.nl:hover{color:var(--paper);text-decoration:none}nav a.nl.on{color:var(--paper);font-weight:600}.tg{margin-left:auto;width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--paper);cursor:pointer;font-size:16px}.sun{display:none}[data-theme=light] .sun{display:inline}[data-theme=light] .moon{display:none}.wrap{max-width:1140px;margin:0 auto;padding:44px 24px 80px;display:flex;gap:44px}.side{flex:0 0 210px;position:sticky;top:84px;align-self:flex-start;max-height:calc(100vh - 100px);overflow-y:auto}.side h4{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin:18px 0 8px}.side a{display:block;color:var(--dim);font-size:14px;padding:5px 0;border-left:2px solid transparent;padding-left:10px;margin-left:-12px}.side a:hover{color:var(--paper);text-decoration:none}.side a.on{color:var(--red2);font-weight:600;border-left-color:var(--red)}.main{flex:1;min-width:0;max-width:760px}h1{font-family:var(--display);font-size:clamp(30px,5vw,44px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:14px}h2{font-family:var(--display);font-size:26px;font-weight:700;margin:40px 0 12px;letter-spacing:-.5px;padding-top:8px}h3{font-size:18px;font-weight:700;margin:26px 0 8px;color:var(--paper)}.main p{margin:13px 0}.main ul,.main ol{margin:13px 0 13px 24px}.main li{margin:6px 0}.lead{font-size:18px;color:var(--dim);margin-bottom:8px}.meta{color:var(--dim);font-size:14px;margin-bottom:28px}code{font-family:var(--mono);font-size:.88em;background:var(--ink2);padding:2px 6px;border-radius:5px;color:var(--red2)}pre{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:18px;overflow-x:auto;margin:16px 0}pre code{background:none;padding:0;color:var(--codefg);font-size:13px;line-height:1.7}table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}th{color:var(--gold);font-weight:600}blockquote{border-left:3px solid var(--red);padding:6px 16px;margin:16px 0;color:var(--dim);background:var(--ink2);border-radius:0 8px 8px 0}.tip{border-left-color:var(--jade)}.warn{border-left-color:var(--gold)}.pager{display:flex;justify-content:space-between;margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:14.5px}.card{display:block;border:1px solid var(--line);border-radius:12px;padding:22px;margin:14px 0;background:var(--ink2);transition:border-color .2s,transform .15s}.card:hover{border-color:var(--red);transform:translateY(-2px);text-decoration:none}.card .t{font-family:var(--display);font-size:21px;font-weight:700;color:var(--paper)}.card .d{color:var(--dim);font-size:14.5px;margin-top:6px}.card .m{color:var(--gold);font-size:13px;margin-top:10px}footer{border-top:1px solid var(--line);padding:30px 24px;text-align:center;color:var(--dim);font-size:13.5px}@media(max-width:760px){.wrap{flex-direction:column;gap:20px}.side{position:static;flex:none;max-height:none}}</style></head><body><nav><div class=in><a class=brand href="/"><span class=seal>奇</span> 奇语 Qi</a><a class="nl on" href="/docs/">文档</a><a class="nl" href="/blog/">博客</a><a class=nl href="https://github.com/qilang-project/qi">GitHub</a><button class=tg id=tg><span class=moon>🌙</span><span class=sun>☀️</span></button></div></nav><div class=wrap><aside class=side><h4>开始</h4><a href="/docs/">简介</a><a href="/docs/安装.html">安装</a><a href="/docs/第一个程序.html">第一个程序</a><h4>语言</h4><a class=on href="/docs/基础语法.html">变量与类型</a><a href="/docs/函数与方法.html">函数与方法</a><a href="/docs/控制流.html">控制流</a><a href="/docs/结构体与枚举.html">结构体与枚举</a><a href="/docs/错误处理.html">错误处理</a><a href="/docs/异步.html">异步与协程</a><a href="/docs/包与模块.html">包与模块</a><h4>标准库</h4><a href="/docs/标准库.html">总览</a><a href="/docs/输入输出.html">输入输出与文件</a><a href="/docs/字符串.html">字符串</a><a href="/docs/JSON.html">JSON</a><a href="/docs/网络.html">网络与 HTTP</a><a href="/docs/大模型.html">大模型</a><h4>生态</h4><a href="/docs/框架.html">Web / CLI / Agent</a><h4>参考</h4><a href="/docs/命令行工具.html">命令行工具</a><a href="/docs/保留字.html">保留字与陷阱</a><a href="/docs/常见问题.html">常见问题</a><a href="/docs/给AI.html">给 AI / Agent</a></aside><div class=main><h1>变量与类型</h1><h2>变量与常量</h2><pre><code>变量 名字 = "奇语";          // 类型推断
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>变量与类型 — 奇语言 Qi</title>
+<meta name="description" content="变量/类型/运算符/数组">
+<link rel="canonical" href="https://qilang.org/docs/基础语法.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="奇语言 Qi">
+<meta property="og:title" content="变量与类型 — 奇语言 Qi">
+<meta property="og:description" content="变量/类型/运算符/数组">
+<meta property="og:url" content="https://qilang.org/docs/基础语法.html">
+<meta property="og:image" content="https://qilang.org/og.png">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="变量与类型 — 奇语言 Qi">
+<meta name="twitter:image" content="https://qilang.org/og.png">
+<script>(function(){try{var t=localStorage.getItem('qi-theme');if(t==='light'||(!t&&matchMedia('(prefers-color-scheme: light)').matches))document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "变量与类型", "description": "变量/类型/运算符/数组", "inLanguage": "zh-CN", "url": "https://qilang.org/docs/基础语法.html", "dateModified": "2026-07-03", "isPartOf": {"@type": "WebSite", "name": "奇语言 Qi", "url": "https://qilang.org/"}, "publisher": {"@type": "Organization", "name": "qilang-project", "url": "https://qilang.org/"}}</script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <nav aria-label="主导航">
+      <a class="logo" href="/"><span class="glyph">奇</span> 奇语言 <span style="color:var(--fg-dim);font-weight:400">Qi</span></a>
+      <div class="links" id="nav-links">
+        <a href="/">首页</a>
+        <a href="/docs/" class="on">文档</a>
+        <a href="/blog/" class="">博客</a>
+        <a href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <button class="nav-btn" id="nav-toggle" aria-label="菜单" aria-expanded="false">☰</button>
+      <button class="theme-btn" id="theme-toggle" aria-label="切换深浅主题"><span class="moon">🌙</span><span class="sun">☀️</span></button>
+    </nav>
+  </div>
+</header>
+<div class="page">
+<aside class="side"><nav aria-label="文档目录"><h4>开始</h4><a href="/docs/">简介</a><a href="/docs/安装.html">安装</a><a href="/docs/第一个程序.html">第一个程序</a><h4>语言</h4><a class=on href="/docs/基础语法.html">变量与类型</a><a href="/docs/函数与方法.html">函数与方法</a><a href="/docs/控制流.html">控制流</a><a href="/docs/结构体与枚举.html">结构体与枚举</a><a href="/docs/错误处理.html">错误处理</a><a href="/docs/异步.html">异步与协程</a><a href="/docs/包与模块.html">包与模块</a><h4>标准库</h4><a href="/docs/标准库.html">总览</a><a href="/docs/输入输出.html">输入输出与文件</a><a href="/docs/字符串.html">字符串</a><a href="/docs/JSON.html">JSON</a><a href="/docs/网络.html">网络与 HTTP</a><a href="/docs/大模型.html">大模型</a><h4>生态</h4><a href="/docs/框架.html">Web / CLI / Agent</a><h4>参考</h4><a href="/docs/命令行工具.html">命令行工具</a><a href="/docs/保留字.html">保留字与陷阱</a><a href="/docs/常见问题.html">常见问题</a><a href="/docs/给AI.html">给 AI / Agent</a></nav></aside>
+<main class="main"><article><h1>变量与类型</h1><h2>变量与常量</h2><pre><code>变量 名字 = "奇语";          // 类型推断
 变量 年龄: 整数 = 10;         // 显式类型
 常量 PI = 3.14159;            // 不可变常量</code></pre><h2>基础类型</h2><table><tr><th>类型</th><th>含义</th><th>LLVM 实际</th></tr><tr><td>整数</td><td>整数（<strong>默认 64 位</strong>）</td><td>i64</td></tr><tr><td>长整数 / 短整数 / 字节</td><td>64 / 16 / 8 位</td><td>i64 / i16 / i8</td></tr><tr><td>浮点数</td><td>64 位浮点</td><td>double</td></tr><tr><td>布尔</td><td>真 / 假</td><td>i1</td></tr><tr><td>字符串</td><td>UTF-8 字符串</td><td>ptr</td></tr><tr><td>空</td><td>无返回值</td><td>void</td></tr></table><blockquote class=warn><code>整数</code> 映射为 <strong>i64</strong>（不是 i32）。需要更窄类型用 <code>短整数</code> / <code>字节</code>。</blockquote><h2>运算符</h2><p>算术 <code>+ - * / %</code>，比较 <code>== != &lt; &lt;= &gt; &gt;=</code>，逻辑 <code>&amp;&amp; || !</code>。布尔字面量 <code>真</code> / <code>假</code>。</p><h2>数组</h2><pre><code>变量 数 = [1, 2, 3, 4, 5];
 IO.打印(数[0]);          // 第一个元素
 变量 长度值 = 数.长度;    // 长度</code></pre><h2>字符串拼接</h2><pre><code>变量 招呼 = "你好，" + 名字 + "！";
 // 数字转字符串再拼
-变量 行 = "年龄 = " + 整数转字符串(年龄);</code></pre><div class=pager><a href="/docs/第一个程序.html">← 第一个程序</a><a href="/docs/函数与方法.html">函数与方法 →</a></div></div></div><footer>© 2026 奇语 Qi · MIT License · <a href="/">qilang-project.github.io</a></footer><script>document.getElementById('tg').onclick=function(){var d=document.documentElement;if(d.getAttribute('data-theme')==='light'){d.removeAttribute('data-theme');try{localStorage.setItem('qi-theme','dark')}catch(e){}}else{d.setAttribute('data-theme','light');try{localStorage.setItem('qi-theme','light')}catch(e){}}};</script></body></html>
+变量 行 = "年龄 = " + 整数转字符串(年龄);</code></pre><div class=pager><a href="/docs/第一个程序.html">← 第一个程序</a><a href="/docs/函数与方法.html">函数与方法 →</a></div></article></main>
+</div>
+<footer class="site">
+  <div class="wrap">
+    <div class="row">
+      <div>© 2026 qilang-project · MIT License</div>
+      <div><a href="/">首页</a> · <a href="/docs/">文档</a> · <a href="/blog/">博客</a> · <a href="https://github.com/qilang-project" target="_blank" rel="noopener">GitHub</a></div>
+    </div>
+  </div>
+</footer>
+<script src="/theme.js"></script>
+</body>
+</html>

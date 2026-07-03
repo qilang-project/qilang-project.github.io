@@ -3,628 +3,342 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>奇语 Qi — 100% 中文关键字的系统级编程语言</title>
-<meta name="description" content="奇语（Qi）是一门 100% 中文关键字、编译到原生机器码的现代系统级编程语言。LLVM 代码生成、M:N 协程异步运行时、完整工具链与标准库。">
-<meta name="keywords" content="奇语,Qi,Qi语言,中文编程语言,中文编程,编译型语言,LLVM,系统编程,协程,异步运行时,qi-web,qi-cli,qi-harness">
-<meta name="author" content="qilang-project">
-<meta name="robots" content="index,follow">
-<link rel="canonical" href="https://qilang-project.github.io/">
-<link rel="alternate" type="text/plain" href="https://qilang-project.github.io/llms.txt" title="llms.txt (for AI)">
+<title>奇语言 Qi — 100% 中文关键字的编译型编程语言</title>
+<meta name="description" content="奇语言(Qi)是一门 100% 中文关键字的编译型编程语言:LLVM 21 原生后端、ARC 自动内存管理、完整异常处理、Go 风格并发、30+ 标准库模块、包管理与交叉编译。计算性能与 Go 同梯队。">
+<link rel="canonical" href="https://qilang.org/">
+<link rel="alternate" type="text/plain" href="https://qilang.org/llms.txt" title="llms.txt (for AI)">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="奇语 Qi">
-<meta property="og:title" content="奇语 Qi — 100% 中文关键字的系统级编程语言">
-<meta property="og:description" content="用中文写系统级程序，编译成原生机器码。LLVM 后端、M:N 协程异步、Web/CLI/LLM Agent 框架，实测 122k RPS。">
-<meta property="og:url" content="https://qilang-project.github.io/">
-<meta property="og:image" content="https://qilang-project.github.io/og.png">
+<meta property="og:site_name" content="奇语言 Qi">
+<meta property="og:title" content="奇语言 Qi — 100% 中文关键字的编译型编程语言">
+<meta property="og:description" content="LLVM 21 原生后端、ARC 自动内存管理、Go 风格并发、30+ 标准库模块、包管理与交叉编译。计算性能与 Go 同梯队。">
+<meta property="og:url" content="https://qilang.org/">
+<meta property="og:image" content="https://qilang.org/og.png">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="奇语 Qi — 100% 中文关键字的系统级编程语言">
-<meta name="twitter:description" content="用中文写系统级程序，编译成原生机器码。LLVM 后端、M:N 协程异步、122k RPS 的 Web 框架。">
-<meta name="twitter:image" content="https://qilang-project.github.io/og.png">
+<meta name="twitter:title" content="奇语言 Qi — 100% 中文关键字的编译型编程语言">
+<meta name="twitter:description" content="LLVM 21 原生后端、ARC 自动内存管理、Go 风格并发、30+ 标准库模块、包管理与交叉编译。">
+<meta name="twitter:image" content="https://qilang.org/og.png">
+<script>(function(){try{var t=localStorage.getItem('qi-theme');if(t==='light'||(!t&&matchMedia('(prefers-color-scheme: light)').matches))document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/site.css">
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "name": "奇语 Qi",
-      "alternateName": ["Qi", "Qi语言", "Qi Language"],
-      "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "macOS, Linux, Windows",
-      "description": "100% 中文关键字、编译到 LLVM 原生机器码的系统级编程语言。内置 M:N 协程异步运行时，配套 Web 框架（qi-web，~122k RPS）、CLI 框架（qi-cli）、LLM Agent 框架（qi-harness）、语言服务器与工具链。",
-      "url": "https://qilang-project.github.io/",
-      "downloadUrl": "https://github.com/qilang-project/qi",
-      "softwareVersion": "0.x",
-      "programmingLanguage": "Qi",
-      "license": "https://opensource.org/licenses/MIT",
-      "author": { "@type": "Organization", "name": "qilang-project", "url": "https://github.com/qilang-project" },
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-    },
-    {
-      "@type": "WebSite",
-      "name": "奇语 Qi",
-      "url": "https://qilang-project.github.io/",
-      "inLanguage": "zh-CN",
-      "description": "奇语（Qi）编程语言官网，含文档与博客。"
-    }
-  ]
-}
-</script>
-<style>
-  :root {
-    /* ---- dark (default) ---- */
-    --ink: #14110f;
-    --ink-2: #1c1916;
-    --ink-3: #26211d;
-    --paper: #f4efe6;
-    --paper-dim: #b8af9f;
-    --cinnabar: #d6442f;
-    --cinnabar-soft: #e8674f;
-    --jade: #5cb494;
-    --gold: #d4ac57;
-    --line: rgba(244, 239, 230, 0.10);
-    --surface-hi: rgba(244, 239, 230, 0.04);
-    --nav-bg: rgba(20, 17, 15, 0.72);
-    --watermark: rgba(214, 68, 47, 0.055);
-    /* fixed: text that always sits on the cinnabar accent — never theme-flips */
-    --on-cinnabar: #fdf2ee;
-    /* fixed: the "inverse chip" used by the GitHub CTA */
-    --chip-bg: #f4efe6;
-    --chip-fg: #14110f;
-    /* code surface stays dark in both themes for readable syntax highlighting */
-    --code-bg: #1c1916;
-    --code-fg: #f4efe6;
-    --code-line: rgba(244, 239, 230, 0.10);
-    --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-    --display: "Fraunces", "Noto Serif SC", Georgia, "Songti SC", serif;
-    --mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
-    --sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
-  }
-
-  [data-theme="light"] {
-    --ink: #f5efe3;          /* warm rice paper */
-    --ink-2: #fffdf7;
-    --ink-3: #ece4d4;
-    --paper: #221c17;        /* sumi ink */
-    --paper-dim: #6e6457;
-    --cinnabar: #c0392a;
-    --cinnabar-soft: #d2543f;
-    --jade: #2f7d60;
-    --gold: #9a7a2c;
-    --line: rgba(34, 28, 23, 0.13);
-    --surface-hi: rgba(34, 28, 23, 0.03);
-    --nav-bg: rgba(245, 239, 227, 0.82);
-    --watermark: rgba(192, 57, 42, 0.07);
-    --on-cinnabar: #fdf2ee;  /* stays light → red bg always gets light text */
-    --chip-bg: #221c17;      /* dark ink chip on paper */
-    --chip-fg: #f5efe3;
-    --shadow: 0 22px 50px rgba(96, 70, 40, 0.16);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--ink);
-    color: var(--paper);
-    font-family: var(--sans);
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  ::selection { background: var(--cinnabar); color: var(--on-cinnabar); }
-
-  a { color: inherit; text-decoration: none; }
-
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-
-  /* ---------- nav ---------- */
-  body, .stat, .feat, .eco-card, nav, section { transition: background .35s ease, color .35s ease, border-color .35s ease; }
-
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(14px);
-    background: var(--nav-bg);
-    border-bottom: 1px solid var(--line);
-  }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 19px; letter-spacing: 0.5px; }
-  .brand .seal {
-    width: 36px; height: 36px; border-radius: 9px;
-    display: grid; place-items: center;
-    background: var(--cinnabar); color: var(--on-cinnabar);
-    font-family: var(--display); font-size: 23px; font-weight: 800;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), 0 6px 18px rgba(214,68,47,0.32);
-  }
-  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 14.5px; }
-  .nav-links a { color: var(--paper-dim); transition: color .2s; white-space: nowrap; }
-  .nav-links a:hover { color: var(--paper); }
-  .nav-cta {
-    background: var(--chip-bg); color: var(--chip-fg) !important;
-    padding: 8px 16px; border-radius: 8px; font-weight: 700;
-    transition: transform .15s, box-shadow .2s;
-  }
-  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.28); }
-  .theme-toggle {
-    width: 38px; height: 38px; border-radius: 9px; cursor: pointer;
-    display: grid; place-items: center; font-size: 17px; line-height: 1;
-    background: transparent; border: 1px solid var(--line); color: var(--paper);
-    transition: border-color .2s, transform .15s, background .2s;
-  }
-  .theme-toggle:hover { border-color: var(--paper-dim); transform: translateY(-1px); }
-  .theme-toggle .sun { display: none; }
-  [data-theme="light"] .theme-toggle .sun { display: block; }
-  [data-theme="light"] .theme-toggle .moon { display: none; }
-  @media (max-width: 720px) { .nav-links { gap: 16px; } .nav-links a:not(.nav-cta):not(.keep) { display: none; } }
-
-  /* ---------- hero ---------- */
-  .hero { position: relative; padding: 110px 0 90px; overflow: hidden; }
-  .hero-mark {
-    position: absolute; right: -4%; top: -8%;
-    font-family: var(--display); font-size: 46vw; font-weight: 800; line-height: 1;
-    color: var(--watermark);
-    pointer-events: none; z-index: 0; user-select: none; will-change: transform;
-  }
-  /* 手机端：46vw 太小且偏右上被 overflow 裁掉、透明度也太淡 → 放大、
-     重定位到可见区、并把水印透明度提一档（深/浅主题各自覆盖） */
-  @media (max-width: 720px) {
-    :root { --watermark: rgba(214, 68, 47, 0.10); }
-    [data-theme="light"] { --watermark: rgba(192, 57, 42, 0.12); }
-    .hero-mark { font-size: 90vw; right: -14%; top: -2%; }
-  }
-  .hero .wrap { position: relative; z-index: 1; }
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--gold); font-weight: 600; margin-bottom: 22px;
-    border: 1px solid rgba(201,161,74,0.3); padding: 6px 14px; border-radius: 999px;
-  }
-  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--jade); box-shadow: 0 0 8px var(--jade); }
-  h1 {
-    font-family: var(--display);
-    font-size: clamp(40px, 6.6vw, 82px); line-height: 1.02;
-    font-weight: 800; letter-spacing: -1.5px; margin-bottom: 24px;
-  }
-  h1 .accent { color: var(--cinnabar); font-style: italic; }
-  .lede { font-size: clamp(17px, 2.2vw, 21px); color: var(--paper-dim); max-width: 640px; margin-bottom: 38px; }
-  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 14px 26px; border-radius: 10px; font-weight: 600; font-size: 15.5px;
-    transition: transform .15s, box-shadow .2s, background .2s;
-  }
-  .btn-primary { background: var(--cinnabar); color: var(--on-cinnabar); box-shadow: 0 10px 30px rgba(214,68,47,.3); }
-  .btn-primary:hover { transform: translateY(-2px); background: var(--cinnabar-soft); box-shadow: 0 14px 38px rgba(214,68,47,.42); }
-  .btn-ghost { border: 1px solid var(--line); color: var(--paper); }
-  .btn-ghost:hover { border-color: var(--paper-dim); transform: translateY(-2px); }
-
-  .install {
-    margin-top: 40px; display: inline-flex; align-items: center; gap: 14px;
-    background: var(--code-bg); border: 1px solid var(--code-line);
-    border-radius: 12px; padding: 14px 18px; font-family: var(--mono); font-size: 14px;
-    max-width: 100%; overflow-x: auto;
-  }
-  .install .pfx { color: var(--jade); }
-  .install code { color: var(--code-fg); white-space: nowrap; }
-  .copy-btn {
-    margin-left: auto; padding-left: 14px; cursor: pointer; color: #b3a99a;
-    border-left: 1px solid var(--code-line); background: none; font-family: var(--sans);
-    font-size: 13px; white-space: nowrap;
-  }
-  .copy-btn:hover { color: var(--code-fg); }
-
-  /* ---------- stats ---------- */
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border-radius: 16px; overflow: hidden; margin: 70px 0 0; }
-  .stat { background: var(--ink-2); padding: 28px 24px; text-align: center; }
-  .stat .num { font-family: var(--display); font-size: clamp(30px, 4vw, 44px); font-weight: 800; color: var(--cinnabar); letter-spacing: -1px; }
-  .stat .lbl { font-size: 13.5px; color: var(--paper-dim); margin-top: 6px; }
-  @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } }
-
-  /* ---------- section ---------- */
-  section { padding: 96px 0; }
-  .sec-head { margin-bottom: 54px; max-width: 660px; }
-  .sec-tag { font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cinnabar); font-weight: 700; }
-  .sec-head h2 { font-family: var(--display); font-size: clamp(30px, 4.2vw, 46px); font-weight: 800; letter-spacing: -1px; margin: 12px 0 16px; }
-  .sec-head p { color: var(--paper-dim); font-size: 17px; }
-
-  /* ---------- code showcase ---------- */
-  .showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: stretch; }
-  @media (max-width: 860px) { .showcase { grid-template-columns: 1fr; } }
-  .code-card {
-    background: var(--code-bg); color: var(--code-fg);
-    border: 1px solid var(--code-line); border-radius: 14px; overflow: hidden;
-    display: flex; flex-direction: column;
-  }
-  .code-card pre { color: var(--code-fg); }
-  .code-card .bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--code-line); }
-  .code-card .bar .dots { display: flex; gap: 6px; }
-  .code-card .bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
-  .code-card .bar .dots i:nth-child(1) { background: #e05c4a; }
-  .code-card .bar .dots i:nth-child(2) { background: var(--gold); }
-  .code-card .bar .dots i:nth-child(3) { background: var(--jade); }
-  .code-card .bar .fname { font-family: var(--mono); font-size: 12.5px; color: var(--paper-dim); margin-left: 6px; }
-  pre { margin: 0; padding: 20px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.7; flex: 1; }
-  code.block { display: block; white-space: pre; }
-  .kw { color: var(--cinnabar-soft); }
-  .ty { color: var(--gold); }
-  .str { color: var(--jade); }
-  .fn { color: #7cb3e8; }
-  .cm { color: #6b6258; font-style: italic; }
-  .num2 { color: #c98bd6; }
-
-  /* ---------- features ---------- */
-  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  @media (max-width: 860px) { .features { grid-template-columns: 1fr; } }
-  .feat {
-    background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 30px 26px;
-    transition: transform .2s, border-color .2s;
-  }
-  .feat:hover { transform: translateY(-4px); border-color: rgba(214,68,47,.4); }
-  .feat .ico { font-size: 26px; margin-bottom: 16px; }
-  .feat h3 { font-family: var(--display); font-size: 21px; margin-bottom: 10px; font-weight: 600; letter-spacing: -.3px; }
-  .feat p { color: var(--paper-dim); font-size: 14.5px; }
-
-  /* ---------- ecosystem ---------- */
-  .eco { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  @media (max-width: 980px) { .eco { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 520px) { .eco { grid-template-columns: 1fr; } }
-  .eco-card {
-    background: linear-gradient(160deg, var(--ink-2), var(--ink-3));
-    border: 1px solid var(--line); border-radius: 14px; padding: 24px 22px;
-    transition: transform .2s, border-color .2s;
-  }
-  .eco-card:hover { transform: translateY(-3px); border-color: var(--line); }
-  .eco-card .name { font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--cinnabar-soft); }
-  .eco-card .role { font-size: 13px; color: var(--gold); margin: 4px 0 12px; }
-  .eco-card p { font-size: 13.5px; color: var(--paper-dim); }
-
-  /* ---------- bottom cta ---------- */
-  .final {
-    text-align: center; padding: 110px 0;
-    background: radial-gradient(circle at 50% 0%, rgba(214,68,47,0.12), transparent 60%);
-  }
-  .final h2 { font-family: var(--display); font-size: clamp(32px, 5vw, 56px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 18px; }
-  .final p { color: var(--paper-dim); font-size: 18px; margin-bottom: 36px; }
-
-  footer { border-top: 1px solid var(--line); padding: 44px 0; color: var(--paper-dim); font-size: 14px; }
-  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
-  footer a { color: var(--paper-dim); transition: color .2s; }
-  footer a:hover { color: var(--paper); }
-  .foot-links { display: flex; gap: 22px; }
-
-  /* Progressive enhancement: only hide pre-animation content once JS confirms
-     GSAP is ready. If the script fails to load, everything stays visible. */
-  .gsap-ready .reveal { opacity: 0; }
-  .gsap-ready .hero-anim { opacity: 0; }
-</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Noto+Serif+SC:wght@600;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>
-  // Apply saved/system theme before paint to avoid a flash of the wrong theme.
-  (function () {
-    try {
-      var saved = localStorage.getItem('qi-theme');
-      var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-      var theme = saved || (prefersLight ? 'light' : 'dark');
-      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
-    } catch (e) {}
-  })();
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://qilang.org/#org","name":"qilang-project","url":"https://qilang.org/","logo":"https://qilang.org/og.png","sameAs":["https://github.com/qilang-project"]},
+{"@type":"WebSite","@id":"https://qilang.org/#site","url":"https://qilang.org/","name":"奇语言 Qi","inLanguage":"zh-CN","publisher":{"@id":"https://qilang.org/#org"}},
+{"@type":"SoftwareApplication","name":"奇语言 Qi","alternateName":["Qi","Qi语言","Qi Language"],"applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Linux, Windows","softwareVersion":"2026.07.03-1","url":"https://qilang.org/","downloadUrl":"https://github.com/qilang-project/qi/releases","license":"https://opensource.org/licenses/MIT","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"100% 中文关键字的编译型编程语言:LLVM 21 原生后端、ARC 自动内存管理、完整异常处理、Go 风格并发、包管理与交叉编译。","publisher":{"@id":"https://qilang.org/#org"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"奇语言是玩具项目吗?","acceptedAnswer":{"@type":"Answer","text":"不是。奇语言有 LLVM 21 原生后端、ARC 自动内存管理、完整异常处理(尝试/捕获/最终/抛出)、Go 风格 M:N 协程、30+ 标准库模块、包管理器 qi get、交叉编译、LSP + VSCode 扩展、测试框架与三平台 CI,155 个可运行示例。"}},
+{"@type":"Question","name":"奇语言性能如何?","acceptedAnswer":{"@type":"Answer","text":"同机实测:计算密集 fib(40) 0.28s,快过 Go 1.26(0.32s)约 15%,是 Node 24(0.71s)的 2.5 倍;qi-web 框架 147k RPS,达到 Go net/http 的 90%,为 Node 单进程的 2 倍。"}},
+{"@type":"Question","name":"怎么安装奇语言?","acceptedAnswer":{"@type":"Answer","text":"从 GitHub Releases 下载 2026.07.03-1 预编译包(macOS/Linux/Windows)解压即用;或运行一键安装脚本 install.sh;亦有 macOS pkg 与 Windows msi 安装器。macOS 需 Xcode 命令行工具,Linux 需 clang。"}},
+{"@type":"Question","name":"中文关键字编程不是噱头吗?","acceptedAnswer":{"@type":"Answer","text":"中文只在词法层,不是图形化拖拽或解释器贴皮。代码经 LALRPOP 解析、LLVM 生成原生机器码,与 Rust/Go 同一条工业管线。对中文母语者,关键字零翻译降低认知负荷。"}},
+{"@type":"Question","name":"奇语言内存管理怎么做?","acceptedAnswer":{"@type":"Answer","text":"ARC(自动引用计数)默认开启:字符串、结构体、数组、闭包环境自动回收,长跑服务内存稳定有界。句柄式资源(JSON/列表/哈希表等)手动释放;循环引用不回收,与 Swift 相同。"}},
+{"@type":"Question","name":"AI 或 Agent 能写奇语言吗?","acceptedAnswer":{"@type":"Answer","text":"可以。官网提供 llms.txt 与 llms-full.txt 机器可读语言参考,GitHub 提供可安装的 agent skill(npx skills add https://github.com/qilang-project/qi-lang),文档站有专门的「给 AI / Agent」页。"}}
+]}]}
 </script>
 </head>
 <body>
 
-<nav>
+<header class="site">
   <div class="wrap">
-    <a class="brand" href="#top"><span class="seal">奇</span> 奇语 Qi</a>
-    <div class="nav-links">
-      <a href="#why">特性</a>
-      <a class="keep" href="/docs/">文档</a>
-      <a href="#eco">生态</a>
-      <a class="keep" href="/blog/">博客</a>
-      <a href="#install">安装</a>
-      <a class="nav-cta" href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">GitHub ↗</a>
-      <button class="theme-toggle" id="themeToggle" aria-label="切换深浅色主题" title="切换主题">
-        <span class="moon">🌙</span><span class="sun">☀️</span>
-      </button>
-    </div>
-  </div>
-</nav>
-
-<header class="hero" id="top">
-  <div class="hero-mark" aria-hidden="true">奇</div>
-  <div class="wrap">
-    <span class="eyebrow hero-anim"><span class="dot"></span>编译型 · 原生性能 · 100% 中文</span>
-    <h1 class="hero-anim">用<span class="accent">中文</span>写系统级程序，<br>编译成<span class="accent">原生机器码</span>。</h1>
-    <p class="lede hero-anim">
-      奇语（Qi）是一门关键字全中文的现代编程语言。基于 LLVM 生成原生可执行文件，
-      内置 Go 式 M:N 协程异步运行时，配套编译器、Web 框架、语言服务器和命令行工具链。
-    </p>
-    <div class="hero-cta hero-anim">
-      <a class="btn btn-primary" href="#install">立即开始 →</a>
-      <a class="btn btn-ghost" href="#code">看看代码</a>
-    </div>
-    <div class="install hero-anim">
-      <span class="pfx">$</span>
-      <code id="installCmd">curl -fsSL https://raw.githubusercontent.com/qilang-project/qi/main/scripts/install.sh | bash</code>
-      <button class="copy-btn" onclick="copyInstall(this)">复制</button>
-    </div>
-
-    <div class="stats hero-anim">
-      <div class="stat"><div class="num">122k</div><div class="lbl">qi-web RPS<br>(5.5× Express)</div></div>
-      <div class="stat"><div class="num">25+</div><div class="lbl">标准库模块</div></div>
-      <div class="stat"><div class="num">100%</div><div class="lbl">中文关键字</div></div>
-      <div class="stat"><div class="num">M:N</div><div class="lbl">协程调度器</div></div>
-    </div>
+    <nav aria-label="主导航">
+      <a class="logo" href="/"><span class="glyph">奇</span> 奇语言 <span style="color:var(--fg-dim);font-weight:400">Qi</span></a>
+      <div class="links" id="nav-links">
+        <a href="#lang">语言</a>
+        <a href="#stdlib">标准库</a>
+        <a href="#tooling">工具链</a>
+        <a href="#bench">性能</a>
+        <a href="/docs/">文档</a>
+        <a href="/blog/">博客</a>
+        <a href="#start">下载</a>
+        <a href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <button class="nav-btn" id="nav-toggle" aria-label="菜单" aria-expanded="false">☰</button>
+      <button class="theme-btn" id="theme-toggle" aria-label="切换深浅主题"><span class="moon">🌙</span><span class="sun">☀️</span></button>
+    </nav>
   </div>
 </header>
 
-<section id="why">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag">为什么是 Qi</div>
-      <h2>母语般的代码，工业级的运行时</h2>
-      <p>不是语法糖玩具——真编译、真异步、真有标准库。下面这些都已经在跑。</p>
-    </div>
-    <div class="features">
-      <div class="feat reveal">
-        <div class="ico">🀄</div>
-        <h3>全中文语法</h3>
-        <p>关键字、类型、标准库函数全部中文：<code>函数</code> / <code>变量</code> / <code>如果</code> / <code>当</code> / <code>整数</code> / <code>字符串</code>。读起来像伪代码描述。</p>
-      </div>
-      <div class="feat reveal">
-        <div class="ico">⚙️</div>
-        <h3>LLVM 原生编译</h3>
-        <p>源码 → LALRPOP 解析 → LLVM IR → 原生可执行文件。没有解释器，没有虚拟机，启动即满速。</p>
-      </div>
-      <div class="feat reveal">
-        <div class="ico">🧵</div>
-        <h3>M:N 协程异步</h3>
-        <p>Go 风格 work-stealing 调度器 + <code>未来&lt;T&gt;</code> / <code>等待</code> 语法。轻量协程跑出 12 万 RPS 的 Web 服务。</p>
-      </div>
-      <div class="feat reveal">
-        <div class="ico">📦</div>
-        <h3>厚标准库</h3>
-        <p>HTTP、JSON、加密、正则、数据库、网络、文件、操作系统、压缩、大模型、MCP —— 25 个模块开箱即用。</p>
-      </div>
-      <div class="feat reveal">
-        <div class="ico">🛠️</div>
-        <h3>完整工具链</h3>
-        <p>编译器、语言服务器（补全/跳转/重命名/折叠）、格式化器、VSCode 扩展、cobra 风格 CLI 框架，全都有。</p>
-      </div>
-      <div class="feat reveal">
-        <div class="ico">🤖</div>
-        <h3>AI 原生</h3>
-        <p>内置大模型与 MCP 接口，qi-harness 框架支持可观测、可重试、可评估的 LLM Agent，已接通 parallel tool-calls 与流式。</p>
-      </div>
-    </div>
-  </div>
-</section>
+<main class="wrap">
 
-<section id="code" style="background: var(--ink-2);">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag">代码长什么样</div>
-      <h2>一眼就懂</h2>
-      <p>左边是「你好世界 + 控制流」，右边是「异步并发 + Web 服务」。</p>
+  <div class="hero">
+    <div>
+      <h1>中文思考,<br><span class="zh">原生速度</span></h1>
+      <p class="sub">奇语言不是翻译贴皮——关键字、类型、异常、并发,从源码到机器码全程中文表达,性能与 Go 同场竞技。</p>
+      <p class="sub-en">Qi — think in Chinese, run at native speed.</p>
+      <div class="cta">
+        <a class="btn primary" href="#start">立即开始</a>
+        <a class="btn" href="/docs/">读文档</a>
+        <a class="btn" href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">源码 GitHub</a>
+      </div>
+      <div class="badges">
+        <span>LLVM 21</span><span>ARC 默认开启</span><span>macOS · Linux · Windows</span><span>MIT 许可</span>
+      </div>
     </div>
-    <div class="showcase">
-      <div class="code-card reveal">
-        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span class="fname">你好.qi</span></div>
-<pre><code class="block"><span class="cm">// 你好世界 + 基础控制流</span>
-<span class="kw">包</span> 主程序;
-<span class="kw">导入</span> 标准库.输入输出 <span class="kw">作为</span> IO;
-
-<span class="kw">函数</span> <span class="fn">问候</span>(名字: <span class="ty">字符串</span>) : <span class="ty">字符串</span> {
-    <span class="kw">返回</span> <span class="str">"你好，"</span> + 名字 + <span class="str">"！"</span>;
-}
+    <div class="codecard">
+      <div class="bar"><i></i><i></i><i></i><em>你好世界.qi</em></div>
+      <pre><span class="kw">包</span> 主程序;
 
 <span class="kw">函数</span> <span class="fn">入口</span>() {
-    <span class="kw">变量</span> 名单: <span class="ty">字符串</span> = <span class="str">"小李"</span>;
-    <span class="kw">如果</span> (字符串::字节长度(名单) &gt; <span class="num2">0</span>) {
-        IO.打印行(<span class="fn">问候</span>(名单));
-    } <span class="kw">否则</span> {
-        IO.打印行(<span class="str">"世界，你好"</span>);
-    }
+    <span class="kw">变量</span> 名字: 字符串 = <span class="str">"世界"</span>;
+    <span class="fn">打印行</span>(<span class="str">"你好, "</span> + 名字 + <span class="str">"!"</span>);
+}</pre>
+    </div>
+  </div>
 
-    <span class="kw">变量</span> 计: <span class="ty">整数</span> = <span class="num2">0</span>;
-    <span class="kw">当</span> (计 &lt; <span class="num2">3</span>) {
-        IO.打印行(<span class="str">"第 "</span> + 整数转字符串(计));
-        计 = 计 + <span class="num2">1</span>;
-    }
-}</code></pre>
+  <section id="features">
+    <h2>为什么是奇语言</h2>
+    <p class="h2sub">现代语言该有的,它都有——而且全部用中文表达。</p>
+    <div class="grid">
+      <div class="card"><span class="ico">🀄</span><h3>100% 中文关键字</h3><p>如果/否则、当、函数、变量、结构体、尝试/捕获——语法即母语,中英文标点混用皆可。</p></div>
+      <div class="card"><span class="ico">⚡</span><h3>LLVM 原生编译</h3><p>inkwell + LLVM 21 类型化 IR,-O 四档优化管线。计算密集场景与 C/Rust/Go 同梯队。</p></div>
+      <div class="card"><span class="ico">♻️</span><h3>ARC 自动内存管理</h3><p>字符串/结构体/数组/闭包全自动引用计数回收,默认开启。长跑服务内存稳定有界。</p></div>
+      <div class="card"><span class="ico">🧵</span><h3>Go 风格并发</h3><p>启动 一个协程、通道通信、未来&lt;T&gt; 与 等待——M:N 调度,协程内异常自动入队。</p></div>
+      <div class="card"><span class="ico">📦</span><h3>包管理 qi get</h3><p>qi.toml 声明依赖,支持 GitHub / 任意 git 远程 / 本地路径,锁定 commit,编译期零联网。</p></div>
+      <div class="card"><span class="ico">🎯</span><h3>交叉编译</h3><p>在 mac 上一条命令编出 Linux 可执行文件(x86_64 / aarch64),零 Docker,zig 链接。</p></div>
+    </div>
+  </section>
+
+  <section id="lang">
+    <h2>语言能力全景</h2>
+    <p class="h2sub">类型、控制流、结构体与方法、闭包、异常、并发——每段代码都在 2026.07.03-1 真实编译器上验证通过。</p>
+    <div class="grid2">
+      <div class="codecard">
+        <div class="bar"><i></i><i></i><i></i><em>类型与变量.qi</em></div>
+        <pre><span class="kw">变量</span> 名字 = <span class="str">"Qi"</span>;           <span class="cm">// 类型推断</span>
+<span class="kw">变量</span> 年龄: 整数 = <span class="num">10</span>;       <span class="cm">// 整数 = i64</span>
+<span class="kw">常量</span> PI = <span class="num">3.14159</span>;          <span class="cm">// 不可变</span>
+<span class="kw">变量</span> 激活: 布尔 = <span class="kw">真</span>;
+<span class="fn">打印行</span>(<span class="str">"年龄: "</span> + 年龄);   <span class="cm">// 字符串直接拼数字</span>
+<span class="fn">打印行</span>(<span class="fn">整数转字符串</span>(<span class="num">42</span>));   <span class="cm">// 内建类型转换</span></pre>
       </div>
-      <div class="code-card reveal">
-        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span class="fname">服务.qi</span></div>
-<pre><code class="block"><span class="cm">// 异步函数 + 12 万 RPS Web 服务</span>
-<span class="kw">包</span> 主程序;
-<span class="kw">导入</span> Web::{ 创建应用, 启动 };
-
-<span class="kw">函数</span> <span class="fn">慢查询</span>(编号: <span class="ty">整数</span>) : <span class="ty">未来</span>&lt;<span class="ty">整数</span>&gt; {
-    <span class="kw">返回</span> 编号 * <span class="num2">2</span>;
+      <div class="codecard">
+        <div class="bar"><i></i><i></i><i></i><em>控制流.qi</em></div>
+        <pre><span class="kw">如果</span> x &gt; <span class="num">10</span> {
+    <span class="fn">打印行</span>(<span class="str">"大于10"</span>);
+} <span class="kw">否则</span> {
+    <span class="fn">打印行</span>(<span class="str">"其他"</span>);
+}
+<span class="kw">当</span> i &lt; <span class="num">10</span> { i = i + <span class="num">1</span>; }        <span class="cm">// while</span>
+<span class="kw">对于</span> n <span class="kw">在</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>] { <span class="fn">打印行</span>(n); }</pre>
+      </div>
+      <div class="codecard">
+        <div class="bar"><i></i><i></i><i></i><em>结构体与方法.qi</em></div>
+        <pre><span class="kw">类型</span> 用户 {
+    字符串 姓名;
+    整数 年龄;
 }
 
-<span class="kw">函数</span> <span class="fn">处理</span>(请求: <span class="ty">请求</span>, 响应: <span class="ty">响应</span>) {
-    <span class="kw">变量</span> 值: <span class="ty">整数</span> = <span class="kw">等待</span> <span class="fn">慢查询</span>(<span class="num2">21</span>);
-    响应.JSON(<span class="str">"{\"结果\": "</span> + 整数转字符串(值) + <span class="str">"}"</span>);
+<span class="cm">// Go 风格接收者方法</span>
+<span class="kw">函数</span> (自己 用户) <span class="fn">简介</span>(): 字符串 {
+    <span class="kw">返回</span> 自己.姓名 + <span class="str">"("</span> + 自己.年龄 + <span class="str">"岁)"</span>;
 }
 
-<span class="kw">函数</span> <span class="fn">入口</span>() {
-    <span class="kw">变量</span> 应用 = <span class="fn">创建应用</span>();
-    应用.获取(<span class="str">"/"</span>, <span class="fn">处理</span>);
-    <span class="fn">启动</span>(应用, <span class="num2">3076</span>);  <span class="cm">// 随机高位端口</span>
-}</code></pre>
+<span class="kw">变量</span> 甲 = (用户 { 姓名: <span class="str">"张三"</span>, 年龄: <span class="num">30</span> });
+<span class="fn">打印行</span>(甲.<span class="fn">简介</span>());   <span class="cm">// 张三(30岁)</span></pre>
+      </div>
+      <div class="codecard">
+        <div class="bar"><i></i><i></i><i></i><em>闭包与函数值.qi</em></div>
+        <pre><span class="kw">函数</span> <span class="fn">应用</span>(f: 函数(整数): 整数, x: 整数): 整数 {
+    <span class="kw">返回</span> <span class="fn">f</span>(x);
+}
+
+<span class="kw">变量</span> 基数 = <span class="num">100</span>;
+<span class="kw">变量</span> 加基数 = <span class="kw">闭包</span>(x: 整数): 整数 {
+    <span class="kw">返回</span> x + 基数;   <span class="cm">// 捕获环境,ARC 管理</span>
+};
+<span class="fn">打印行</span>(<span class="fn">应用</span>(加基数, <span class="num">5</span>));   <span class="cm">// 105</span></pre>
+      </div>
+      <div class="codecard">
+        <div class="bar"><i></i><i></i><i></i><em>异常处理.qi</em></div>
+        <pre><span class="kw">函数</span> <span class="fn">除法</span>(a: 整数, b: 整数): 整数 {
+    <span class="kw">如果</span> b == <span class="num">0</span> { <span class="kw">抛出</span> <span class="str">"除数不能为零"</span>; }
+    <span class="kw">返回</span> a / b;
+}
+
+<span class="kw">尝试</span> {
+    <span class="fn">打印行</span>(<span class="fn">除法</span>(<span class="num">10</span>, <span class="num">0</span>));
+} <span class="kw">捕获</span> 错误 {
+    <span class="fn">打印行</span>(<span class="str">"捕获: "</span> + 错误);   <span class="cm">// 跨函数传播</span>
+} <span class="kw">最终</span> {
+    <span class="fn">打印行</span>(<span class="str">"清理完成"</span>);
+}</pre>
+      </div>
+      <div class="codecard">
+        <div class="bar"><i></i><i></i><i></i><em>并发.qi</em></div>
+        <pre><span class="kw">函数</span> <span class="fn">生产者</span>(信道: 通道&lt;整数&gt;) { 信道 &lt;- <span class="num">42</span>; }
+<span class="kw">函数</span> <span class="fn">慢算</span>(x: 整数): 未来&lt;整数&gt; { <span class="kw">返回</span> x * x; }
+
+<span class="kw">变量</span> 信道 = 通道&lt;整数&gt;();
+<span class="kw">启动</span> <span class="fn">生产者</span>(信道);          <span class="cm">// goroutine</span>
+<span class="fn">打印行</span>(&lt;- 信道);            <span class="cm">// 42,阻塞接收</span>
+<span class="kw">变量</span> 结果值: 整数 = <span class="kw">等待</span> <span class="fn">慢算</span>(<span class="num">5</span>);</pre>
       </div>
     </div>
-  </div>
-</section>
+    <p class="bench-note" style="margin-top:22px">还有:默认参数与变参、<code>公开</code> 可见性、多文件包组织、goroutine 异常队列、等待组、原子/互斥锁…… 完整语法见 <a href="/docs/基础语法.html">文档</a> 与 <a href="/llms-full.txt">llms-full.txt</a>(机器可读全参考)。</p>
+  </section>
 
-<section id="eco">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-tag">生态系统</div>
-      <h2>一个 monorepo，全套配齐</h2>
-      <p>编译器到 IDE 集成，Web 框架到 AI Agent，都在同一个 Cargo workspace 里。</p>
+  <section id="stdlib">
+    <h2>标准库:30+ 模块,能写真东西</h2>
+    <p class="h2sub">从文件到 HTTP、从 SQLite 到大模型调用,均为编译器内建模块,导入即用。仓库附 155 个可运行示例(基础 / 标准库 / 并发 / 高级 / 图形界面)。</p>
+    <div class="chips">
+      <span>输入输出·文件</span><span>文本·字符串</span><span>JSON</span><span>HTTP 客户端/服务器</span><span>网络 TCP/UDP</span><span>WebSocket</span><span>加密 SHA/HMAC/Base64</span><span>正则</span><span>时间·日期</span><span>哈希表</span><span>列表</span><span>随机·UUID</span><span>路径</span><span>操作系统</span><span>子进程</span><span>数据库 SQLite</span><span>压缩 Gzip</span><span>配置 TOML/INI</span><span>大模型 LLM</span><span>MCP 服务器/客户端</span><span>命令行</span><span>测试断言</span><span>同步原语</span><span>环境</span><span>向量</span><span>图形化 GUI</span><span>TLS</span><span>信号</span><span>字节切片</span>
     </div>
-    <div class="eco">
-      <div class="eco-card reveal"><div class="name">qi</div><div class="role">编译器 · Rust</div><p>LLVM 后端、中文词法/语法、M:N 异步运行时、GC。核心 7 万行。</p></div>
-      <div class="eco-card reveal"><div class="name">qi-web</div><div class="role">Web 框架 · Qi</div><p>Express / Fiber 风格。122k RPS，比 Express 快 5.5 倍、比 Node 快 25%。</p></div>
-      <div class="eco-card reveal"><div class="name">qi-cli</div><div class="role">CLI 框架 · Qi</div><p>cobra 风格命令树、子命令、持久参数、执行钩子、自动帮助。</p></div>
-      <div class="eco-card reveal"><div class="name">qi-harness</div><div class="role">AI Agent · Qi</div><p>可观测 / 可重试 / 可评估的 LLM Agent 框架，支持流式与并行工具调用。</p></div>
-      <div class="eco-card reveal"><div class="name">qi-lsp</div><div class="role">语言服务器 · Rust</div><p>补全、跳转、引用、重命名、格式化、折叠、语义高亮，CJK 全支持。</p></div>
-      <div class="eco-card reveal"><div class="name">qi-tools</div><div class="role">工具集 · Rust</div><p>qifmt 代码格式化器，被 LSP 复用，统一代码风格。</p></div>
-      <div class="eco-card reveal"><div class="name">qi-gui</div><div class="role">图形库 · Rust</div><p>基于 Tao + Skia 的跨平台窗口与 2D 渲染，静态链接进编译产物。</p></div>
-      <div class="eco-card reveal"><div class="name">qi-vscode</div><div class="role">编辑器扩展 · TS</div><p>语法高亮、代码片段、LSP 客户端、Qi 专属主题。</p></div>
+    <div class="grid" style="margin-top:26px">
+      <div class="card"><h3>真实网络栈</h3><p>HTTP 客户端为 reqwest 实现(GET/POST/PUT/DELETE/PATCH/全定制请求),TCP/UDP 原语齐全,WebSocket、TLS 可用。</p></div>
+      <div class="card"><h3>数据与持久化</h3><p>JSON 句柄式构建/解析,SQLite 数据库,Gzip 压缩,TOML/INI 配置,文件系统全套操作。</p></div>
+      <div class="card"><h3>AI 原生</h3><p>标准库.大模型 直连 OpenAI 兼容 API;标准库.MCP服务器/客户端 让 Qi 程序直接说 MCP 协议。</p></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="install" style="background: var(--ink-2);">
-  <div class="wrap">
-    <div class="sec-head reveal" style="max-width: 760px;">
-      <div class="sec-tag">三十秒上手</div>
-      <h2>装上，写第一个程序</h2>
-      <p>macOS / Linux 一行脚本安装，或从源码用 Cargo 构建（需要 LLVM 15）。</p>
+  <section id="tooling">
+    <h2>工具链全家桶</h2>
+    <p class="h2sub">编译、测试、格式化、补全、打包——工程成熟度不靠嘴说。</p>
+    <div class="grid">
+      <div class="card"><span class="ico">🛠</span><h3>编译器 qi</h3><p>run / compile / check / test / get,命令全部有中文别名(运行/编译/检查)。-O 四档优化;rustc 风格友好错误(行列号 + 源码 caret + 修复提示)。</p></div>
+      <div class="card"><span class="ico">🎯</span><h3>交叉编译</h3><p><code>qi --target linux --arch x86_64 compile</code> 在 macOS 直出 Linux ELF,zig 链接,零 Docker;aarch64 同理。</p></div>
+      <div class="card"><span class="ico">📦</span><h3>包管理 qi get</h3><p>qi.toml(键名中英皆可)+ qi.lock 锁 commit;缓存于 ~/.qi/packages,编译期零联网,可复现构建。</p></div>
+      <div class="card"><span class="ico">🧪</span><h3>qi test</h3><p>递归发现 *_测.qi 逐个编译运行,-f 过滤 / -v 详细,标准库断言或 qi-test 框架(用例/桩/spy)。</p></div>
+      <div class="card"><span class="ico">🔤</span><h3>qifmt 格式化</h3><p>只动空白的保守格式化器:缩进重排、去行尾空白、幂等输出;--check 供 CI 使用。</p></div>
+      <div class="card"><span class="ico">🧩</span><h3>LSP + VSCode</h3><p>qi-lsp 语言服务器:补全、诊断、跳转定义、悬停、格式化;配套 VSCode 扩展与语法高亮、代码片段、深浅主题。</p></div>
     </div>
-    <div class="showcase">
-      <div class="code-card reveal">
-        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span class="fname">安装</span></div>
-<pre><code class="block"><span class="cm"># 一键脚本（预编译二进制）</span>
-<span class="str">curl</span> -fsSL https://raw.githubusercontent.com/\
-qilang-project/qi/main/scripts/install.sh | bash
+  </section>
 
-<span class="cm"># 或从源码构建</span>
-<span class="str">git</span> clone https://github.com/qilang-project/qi
-<span class="str">cd</span> qi-compiler && <span class="str">cargo</span> build --release</code></pre>
+  <section id="bench">
+    <h2>性能与内存</h2>
+    <p class="h2sub">同机实测(Apple M2 Pro · 2026-07),诚实数据,可复现。</p>
+    <div class="bench">
+      <div>
+        <h3>计算密集 · fib(40) 耗时(越短越好)</h3>
+        <div class="bars">
+          <div class="bar-row"><span>奇语言</span><div class="bar-track"><div class="bar-fill qi" style="width:39%"></div></div><span class="bar-val">0.28s</span></div>
+          <div class="bar-row"><span>Go 1.26</span><div class="bar-track"><div class="bar-fill other" style="width:45%"></div></div><span class="bar-val">0.32s</span></div>
+          <div class="bar-row"><span>Node 24</span><div class="bar-track"><div class="bar-fill other" style="width:100%"></div></div><span class="bar-val">0.71s</span></div>
+        </div>
+        <p class="bench-note">-O maximum,LLVM 21 优化管线。递归/内联密集场景快过 Go 约 15%。</p>
       </div>
-      <div class="code-card reveal">
-        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span class="fname">运行</span></div>
-<pre><code class="block"><span class="cm"># 写一个文件</span>
-<span class="kw">包</span> 主程序;
-<span class="kw">导入</span> 标准库.输入输出 <span class="kw">作为</span> IO;
-<span class="kw">函数</span> <span class="fn">入口</span>() { IO.打印行(<span class="str">"你好 Qi"</span>); }
-
-<span class="cm"># 编译并运行</span>
-<span class="str">$</span> qi run 你好.qi
-<span class="jade">你好 Qi</span>
-
-<span class="cm"># 只检查语法</span>
-<span class="str">$</span> qi check 你好.qi</code></pre>
+      <div>
+        <h3>Web 吞吐 · 最小 HTTP 服务(越长越好)</h3>
+        <div class="bars">
+          <div class="bar-row"><span>Go</span><div class="bar-track"><div class="bar-fill other" style="width:100%"></div></div><span class="bar-val">163k rps</span></div>
+          <div class="bar-row"><span>奇语言</span><div class="bar-track"><div class="bar-fill qi" style="width:90%"></div></div><span class="bar-val">147k rps</span></div>
+          <div class="bar-row"><span>Node</span><div class="bar-track"><div class="bar-fill other" style="width:45%"></div></div><span class="bar-val">~74k rps</span></div>
+        </div>
+        <p class="bench-note">qi-web 框架,wrk -t4 -c100。达到 Go net/http 的 90%,为 Node 单进程的 2 倍。</p>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="final">
-  <div class="wrap">
-    <h2>奇思妙想，从一行中文开始。</h2>
-    <p>用你最熟悉的语言，构建快、可靠、能上线的软件。</p>
-    <div class="hero-cta" style="justify-content: center;">
-      <a class="btn btn-primary" href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">前往 GitHub →</a>
-      <a class="btn btn-ghost" href="#code">浏览示例</a>
+    <div class="grid" style="margin-top:32px">
+      <div class="card"><h3>ARC 自动回收</h3><p>字符串/结构体/数组/闭包环境四类对象自动 retain/release,跨线程原子计数,字符串字面量不朽零开销。</p></div>
+      <div class="card"><h3>可观测</h3><p><code>QI_RC_REPORT=1</code> 退出时打印活跃对象计数,当场看到有没有泄漏;<code>QI_ARC=0</code> 可对照关闭。</p></div>
+      <div class="card"><h3>诚实边界</h3><p>循环引用不回收(纯引用计数无环检测,同 Swift);句柄式资源(JSON/列表/哈希表)仍手动释放。</p></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
+  <section id="docs">
+    <h2>文档</h2>
+    <p class="h2sub">从安装到给 AI 看的速成规则,按「入门 → 语言 → 标准库 → 生态」组织。</p>
+    <div class="grid2">
+      <div class="card">
+        <h3>🚀 开始</h3>
+        <p><a href="/docs/">简介</a> · <a href="/docs/安装.html">安装</a> · <a href="/docs/第一个程序.html">第一个程序</a></p>
+        <h3 style="margin-top:18px">📗 语言</h3>
+        <p><a href="/docs/基础语法.html">变量与类型</a> · <a href="/docs/函数与方法.html">函数与方法</a> · <a href="/docs/控制流.html">控制流</a> · <a href="/docs/结构体与枚举.html">结构体与枚举</a> · <a href="/docs/错误处理.html">错误处理</a> · <a href="/docs/异步.html">异步与协程</a> · <a href="/docs/包与模块.html">包与模块</a></p>
+      </div>
+      <div class="card">
+        <h3>📚 标准库</h3>
+        <p><a href="/docs/标准库.html">总览</a> · <a href="/docs/输入输出.html">输入输出与文件</a> · <a href="/docs/字符串.html">字符串</a> · <a href="/docs/JSON.html">JSON</a> · <a href="/docs/网络.html">网络与 HTTP</a> · <a href="/docs/大模型.html">大模型</a></p>
+        <h3 style="margin-top:18px">🧭 生态与参考</h3>
+        <p><a href="/docs/框架.html">Web / CLI / Agent 框架</a> · <a href="/docs/命令行工具.html">命令行工具</a> · <a href="/docs/保留字.html">保留字与陷阱</a> · <a href="/docs/常见问题.html">常见问题</a> · <a href="/docs/给AI.html">给 AI / Agent</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="start">
+    <h2>快速开始</h2>
+    <p class="h2sub">下载解压即用——bin/qi 会自动找到同包的运行时。</p>
+    <div class="steps">
+      <div>
+        <h3>1 · 下载 2026.07.03-1</h3>
+        <div class="dl">
+          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-1/qi-2026.07.03-1-macos-arm64.tar.gz">macOS (Apple Silicon) <span>tar.gz · 53MB</span></a>
+          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-1/qi-2026.07.03-1-linux-x64.tar.gz">Linux (x86_64) <span>tar.gz · 58MB</span></a>
+          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-1/qi-2026.07.03-1-windows-x64.zip">Windows (x86_64) <span>zip · 57MB</span></a>
+        </div>
+        <p class="bench-note" style="margin-top:12px">全部版本见 <a href="https://github.com/qilang-project/qi/releases" target="_blank" rel="noopener">GitHub Releases</a>,亦有 <a href="/docs/安装.html">一键安装脚本</a> 与 pkg/msi 安装器。macOS 编译链接需 Xcode 命令行工具(<code>xcode-select --install</code>);Linux 需 clang。</p>
+      </div>
+      <div>
+        <h3>2 · 写第一个程序</h3>
+        <pre class="shell"><span class="p">$</span> tar xzf qi-2026.07.03-1-macos-arm64.tar.gz
+<span class="p">$</span> cat &gt; 你好.qi &lt;&lt; 'EOF'
+包 主程序;
+
+函数 入口() {
+    打印行("你好, 奇语言!");
+}
+EOF
+<span class="p">$</span> ./bin/qi run 你好.qi
+你好, 奇语言!
+<span class="p">$</span> ./bin/qi 运行 你好.qi    <span class="cm"># 中文命令等价</span>
+你好, 奇语言!</pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <h2>常见问题</h2>
+    <p class="h2sub">直球回答,不绕弯。</p>
+    <details>
+      <summary>这是玩具项目吗?</summary>
+      <p>不是。奇语言有 LLVM 21 原生后端、ARC 自动内存管理、完整异常机制、Go 风格 M:N 协程、30+ 标准库模块、包管理器 <code>qi get</code>、交叉编译、LSP + VSCode 扩展、测试框架与三平台 CI——外加 155 个可运行示例和用它自己写成的 Web/CLI/Agent 框架。</p>
+    </details>
+    <details>
+      <summary>性能到底如何?</summary>
+      <p>同机实测:fib(40) 0.28s,快过 Go 1.26(0.32s)约 15%,是 Node 24(0.71s)的 2.5 倍;qi-web 147k RPS,达 Go net/http 的 90%,为 Node 单进程的 2 倍。数据可复现,基准脚本在仓库里。</p>
+    </details>
+    <details>
+      <summary>怎么安装?</summary>
+      <p>三种方式:① 下载 <a href="#start">2026.07.03-1 预编译包</a> 解压即用;② 一键脚本 <code>curl -fsSL https://raw.githubusercontent.com/qilang-project/qi/main/scripts/install.sh | bash</code>;③ macOS pkg / Windows msi 安装器。macOS 需 Xcode 命令行工具,Linux 需 clang。</p>
+    </details>
+    <details>
+      <summary>这不就是刻板印象里的"中文编程"吗?</summary>
+      <p>刻板印象里的中文编程是图形化拖拽或解释器贴皮。奇语言的中文只在词法层:代码经 LALRPOP 解析、LLVM 21 生成原生机器码,与 Rust/Go 走同一条工业管线。中文关键字消除的是母语者读代码时的翻译损耗,不是替代计算机科学。</p>
+    </details>
+    <details>
+      <summary>内存需要手动管理吗?</summary>
+      <p>不需要。ARC(自动引用计数)默认开启,字符串/结构体/数组/闭包自动回收;<code>QI_RC_REPORT=1</code> 可在退出时打印活跃对象数自查。句柄式资源(JSON/列表/哈希表句柄)仍需手动释放;循环引用不回收(同 Swift),长驻进程注意打破环。</p>
+    </details>
+    <details>
+      <summary>AI / Agent 能直接写奇语言吗?</summary>
+      <p>能,而且是一等公民:<a href="/llms.txt">llms.txt</a>(速成规则)与 <a href="/llms-full.txt">llms-full.txt</a>(完整语言参考)供模型抓取;<code>npx skills add https://github.com/qilang-project/qi-lang</code> 安装 agent skill;文档站有 <a href="/docs/给AI.html">给 AI / Agent</a> 专页。</p>
+    </details>
+  </section>
+
+  <section id="eco">
+    <h2>生态</h2>
+    <p class="h2sub">编译器之外,一圈用奇语言写的框架与配套工程。</p>
+    <div class="grid">
+      <a class="card" href="https://github.com/qilang-project/qi" target="_blank" rel="noopener"><span class="t">qi</span><span class="d">编译器本体:LLVM 21 后端、ARC 运行时、标准库、协程调度器、348 个单元测试全绿。</span></a>
+      <a class="card" href="https://github.com/qilang-project/qi-web" target="_blank" rel="noopener"><span class="t">qi-web</span><span class="d">用奇语言写的 Web 框架,FastAPI/Express 风格路由与中间件,147k RPS。</span></a>
+      <a class="card" href="https://github.com/qilang-project/qi-cli" target="_blank" rel="noopener"><span class="t">qi-cli</span><span class="d">Cobra 风格命令行框架:命令树、子命令、持久参数、自动帮助。</span></a>
+      <a class="card" href="https://github.com/qilang-project/qi-harness" target="_blank" rel="noopener"><span class="t">qi-harness</span><span class="d">LLM Agent 框架:一行配置大模型,自动工具派发循环、流式、追踪、重试。</span></a>
+      <a class="card" href="https://github.com/qilang-project/qi-lsp" target="_blank" rel="noopener"><span class="t">qi-lsp + VSCode</span><span class="d">语言服务器(补全/跳转/诊断/格式化)与 VSCode 扩展、语法高亮、主题。</span></a>
+      <a class="card" href="https://github.com/qilang-project/qi-test" target="_blank" rel="noopener"><span class="t">qi-test</span><span class="d">测试框架:用例、桩、spy,配合内置 qi test 发现并运行 *_测.qi。</span></a>
+      <a class="card" href="https://github.com/qilang-project/qi" target="_blank" rel="noopener"><span class="t">qi-gui</span><span class="d">跨平台 GUI 库(Tao):窗口、事件、2D 渲染、音频,经 标准库.图形化 调用。</span></a>
+      <a class="card" href="https://github.com/qilang-project/qi-installer" target="_blank" rel="noopener"><span class="t">qi-tools / qi-installer</span><span class="d">qifmt 格式化器;macOS pkg 与 Windows msi 安装打包。</span></a>
+      <a class="card" href="https://github.com/qilang-project/qi-lang" target="_blank" rel="noopener"><span class="t">qi-lang (agent skill)</span><span class="d">给 AI 编码助手的语言技能包:npx skills add 即装,含实测过的权威参考。</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
   <div class="wrap">
-    <div>© 2026 奇语 Qi Language · MIT License</div>
-    <div class="foot-links">
-      <a href="#why">特性</a>
-      <a href="#eco">生态</a>
-      <a href="#install">安装</a>
-      <a href="https://github.com/qilang-project/qi" target="_blank" rel="noopener">GitHub</a>
+    <div class="row">
+      <div>© 2026 qilang-project · MIT License</div>
+      <div><a href="/docs/">文档</a> · <a href="/blog/">博客</a> · <a href="/llms.txt">llms.txt</a> · <a href="/llms-full.txt">llms-full.txt</a> · <a href="https://github.com/qilang-project" target="_blank" rel="noopener">GitHub</a> · <a href="https://github.com/qilang-project/qi/releases" target="_blank" rel="noopener">Releases</a></div>
     </div>
   </div>
 </footer>
 
-<!-- GSAP + ScrollTrigger (official animation engine; see greensock/gsap-skills) -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script>
-  // ---- theme toggle ----
-  const themeToggle = document.getElementById('themeToggle');
-  themeToggle.addEventListener('click', () => {
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    if (isLight) {
-      document.documentElement.removeAttribute('data-theme');
-      try { localStorage.setItem('qi-theme', 'dark'); } catch (e) {}
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-      try { localStorage.setItem('qi-theme', 'light'); } catch (e) {}
-    }
-  });
-
-  // ---- copy install command ----
-  function copyInstall(btn) {
-    const txt = document.getElementById('installCmd').textContent;
-    navigator.clipboard.writeText(txt).then(() => {
-      const old = btn.textContent;
-      btn.textContent = '已复制 ✓';
-      setTimeout(() => btn.textContent = old, 1600);
-    });
-  }
-
-  // ---- animations (GSAP) ----
-  // Progressive enhancement: only hide-then-reveal when GSAP actually loaded.
-  if (window.gsap) {
-    gsap.registerPlugin(ScrollTrigger);
-    document.documentElement.classList.add('gsap-ready');
-
-    // gsap.matchMedia drives prefers-reduced-motion: motion users get the full
-    // choreography; reduced-motion users get instant, no-transform reveals.
-    const mm = gsap.matchMedia();
-
-    mm.add(
-      {
-        motion: '(prefers-reduced-motion: no-preference)',
-        reduce: '(prefers-reduced-motion: reduce)',
-      },
-      (ctx) => {
-        const { motion } = ctx.conditions;
-        const dur = motion ? 0.9 : 0;
-        const y = motion ? 26 : 0;
-        const ease = 'power3.out';
-
-        // Hero load timeline — staggered entrance, one orchestrated moment.
-        // CSS already hid .hero-anim (opacity 0) once .gsap-ready was added, so we
-        // animate *to* the visible state with .to() (a .from() would read the
-        // CSS-forced opacity:0 as the "natural" value and animate 0→0).
-        gsap.set('.hero-anim', { y });
-        gsap.to('.hero-anim', {
-          opacity: 1, y: 0, duration: dur, ease,
-          stagger: motion ? 0.12 : 0,
-          onComplete: () => gsap.set('.hero-anim', { clearProps: 'transform' }),
-        });
-
-        // Watermark parallax (motion only) — drifts the giant 奇 as you scroll.
-        if (motion) {
-          gsap.to('.hero-mark', {
-            yPercent: 18, xPercent: 6, ease: 'none',
-            scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 },
-          });
-        }
-
-        // Scroll reveals, batched so elements entering together animate together.
-        gsap.set('.reveal', { opacity: 0, y });
-        ScrollTrigger.batch('.reveal', {
-          start: 'top 86%',
-          once: true,
-          onEnter: (els) =>
-            gsap.to(els, {
-              opacity: 1, y: 0, duration: dur, ease,
-              stagger: motion ? 0.09 : 0,
-              overwrite: true,
-              onComplete: () => gsap.set(els, { clearProps: 'transform' }),
-            }),
-        });
-
-        return () => {}; // matchMedia auto-reverts on query change
-      }
-    );
-  }
-</script>
+<script src="/theme.js"></script>
 </body>
 </html>

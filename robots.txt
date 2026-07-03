@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 
-# GEO: 给 AI / LLM 引擎的纯文本摘要 llms.txt
-Sitemap: https://qilang-project.github.io/sitemap.xml
+# GEO: 给 AI / LLM 引擎的机器可读参考
+# 速成规则: https://qilang.org/llms.txt
+# 完整语言参考: https://qilang.org/llms-full.txt
+Sitemap: https://qilang.org/sitemap.xml
