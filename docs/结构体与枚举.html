@@ -51,12 +51,19 @@
 // 字段访问
 IO.打印行(张三.姓名);</code></pre><blockquote class=warn>用 <code>类型</code> 或 <code>结构体</code> 声明都行。字段名后跟逗号。</blockquote><h2>方法</h2><pre><code>函数 (自己 用户) 介绍() : 字符串 {
     返回 自己.姓名 + "，" + 整数转字符串(自己.年龄) + " 岁";
-}</code></pre><h2>枚举</h2><pre><code>枚举 状态 {
-    就绪,
-    运行中,
-    完成,
-    错误,
-}</code></pre><p>配合 <a href="/docs/控制流.html">匹配</a> 使用枚举变体。</p><div class=pager><a href="/docs/控制流.html">← 控制流</a><a href="/docs/错误处理.html">错误处理 →</a></div></article></main>
+}</code></pre><h2>枚举</h2><pre><code>// 「枚举」是保留字但尚未实现——用整数常量模拟
+常量 状态_就绪: 整数 = 0;
+常量 状态_运行中: 整数 = 1;
+常量 状态_完成: 整数 = 2;
+
+函数 入口() {
+    变量 当前状态 = 状态_运行中;
+    匹配 当前状态 {
+        0 =&gt; { IO.打印行("就绪"); }
+        1 =&gt; { IO.打印行("运行中"); }
+        _ =&gt; { IO.打印行("完成或其他"); }
+    }
+}</code></pre><p><code>枚举</code> 关键字保留但尚未实现——直接写 <code>枚举 状态 { ... }</code> 会解析报错，当前用整数常量配合 <a href="/docs/控制流.html">匹配</a> 模拟。</p><div class=pager><a href="/docs/控制流.html">← 控制流</a><a href="/docs/错误处理.html">错误处理 →</a></div></article></main>
 </div>
 <footer class="site">
   <div class="wrap">

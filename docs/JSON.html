@@ -47,11 +47,12 @@ JSON.设置整数(用户, "年龄", 30);
 JSON.设置布尔(用户, "活跃", 1);
 变量 文本 = JSON.格式化(用户);
 IO.打印行(文本);
-JSON.删除(用户);</code></pre><h2>数组</h2><pre><code>变量 数组 = JSON.创建数组();
-JSON.数组添加字符串(数组, "元素1");
-JSON.数组添加整数(数组, 42);
-变量 长度 = JSON.数组长度(数组);
-变量 值 = JSON.数组获取字符串(数组, 0);</code></pre><div class=pager><a href="/docs/字符串.html">← 字符串</a><a href="/docs/网络.html">网络与 HTTP →</a></div></article></main>
+JSON.删除(用户);</code></pre><h2>数组</h2><pre><code>变量 数组值 = JSON.创建数组();   // 「数组」是保留字，起别名
+JSON.数组添加字符串(数组值, "元素1");
+JSON.数组添加整数(数组值, 42);
+变量 长度 = JSON.数组长度(数组值);
+变量 值 = JSON.数组获取字符串(数组值, 0);
+JSON.删除(数组值);</code></pre><div class=pager><a href="/docs/字符串.html">← 字符串</a><a href="/docs/网络.html">网络与 HTTP →</a></div></article></main>
 </div>
 <footer class="site">
   <div class="wrap">

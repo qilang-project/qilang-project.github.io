@@ -46,12 +46,24 @@
 函数 入口() {
     变量 结果值: 整数 = 等待 异步计算(21);
     IO.打印行(整数转字符串(结果值));   // 42
-}</code></pre><h2>支持的 Future 类型</h2><ul><li><code>未来&lt;整数&gt;</code> / <code>未来&lt;浮点数&gt;</code> / <code>未来&lt;布尔&gt;</code> / <code>未来&lt;字符串&gt;</code></li></ul><h2>协程与通道</h2><pre><code>变量 信道 = 通道&lt;整数&gt;();
-启动 发送者(信道);
-变量 值 = &lt;- 信道;</code></pre><h2>Select 多路复用</h2><pre><code>选择 {
-    情况 值 = &lt;- 通道1 { IO.打印(值); }
-    情况 文本 = &lt;- 通道2 { IO.打印行(文本); }
-}</code></pre><blockquote class=warn><code>选择</code> 自 2026.07.03 起可用：非阻塞轮询多通道，支持 <code>默认</code> 分支（无就绪立即走）与 <code>超时(毫秒)</code> 分支；两者皆无则阻塞至有通道就绪。块结尾需分号。</blockquote><blockquote class=warn>完整 async/await 状态机 codegen 约覆盖 70%；复杂控制流内嵌 await 会退化到同步包装，行为正确但非真协程切换。</blockquote><div class=pager><a href="/docs/错误处理.html">← 错误处理</a><a href="/docs/包与模块.html">包与模块 →</a></div></article></main>
+}</code></pre><h2>支持的 Future 类型</h2><ul><li><code>未来&lt;整数&gt;</code> / <code>未来&lt;浮点数&gt;</code> / <code>未来&lt;布尔&gt;</code> / <code>未来&lt;字符串&gt;</code></li></ul><h2>协程与通道</h2><pre><code>函数 发送者(信道: 通道&lt;整数&gt;) {
+    信道 &lt;- 42;
+}
+
+函数 入口() {
+    变量 信道 = 通道&lt;整数&gt;();
+    启动 发送者(信道);
+    变量 值 = &lt;- 信道;    // 阻塞直到有值
+    IO.打印行(整数转字符串(值));
+}</code></pre><h2>Select 多路复用</h2><pre><code>变量 通道甲 = 通道&lt;整数&gt;();
+选择 {
+    情况 值 := &lt;-通道甲:
+        IO.打印行("收到: " + 整数转字符串(值));
+    情况 超时(500):
+        IO.打印行("超时分支");
+    默认:
+        IO.打印行("默认分支");
+}</code></pre><blockquote class=warn><code>选择</code> 自 2026.07.03 起可用：非阻塞轮询多通道，支持 <code>默认</code> 分支（无就绪立即走）与 <code>超时(毫秒)</code> 分支；两者皆无则阻塞至有通道就绪。分支写 <code>情况 变量 := &lt;-通道:</code>（Go 风格冒号），分支体是裸语句列表，不带花括号。</blockquote><blockquote class=warn>通道目前只支持 <code>通道&lt;整数&gt;</code>——字符串/浮点通道会编译失败。传复杂数据用 JSON / 哈希表句柄（句柄是整数）中转。</blockquote><blockquote class=warn>完整 async/await 状态机 codegen 约覆盖 70%；复杂控制流内嵌 await 会退化到同步包装，行为正确但非真协程切换。</blockquote><div class=pager><a href="/docs/错误处理.html">← 错误处理</a><a href="/docs/包与模块.html">包与模块 →</a></div></article></main>
 </div>
 <footer class="site">
   <div class="wrap">

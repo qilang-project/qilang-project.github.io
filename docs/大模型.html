@@ -40,14 +40,21 @@
 <div class="page">
 <aside class="side"><nav aria-label="文档目录"><h4>开始</h4><a href="/docs/">简介</a><a href="/docs/安装.html">安装</a><a href="/docs/第一个程序.html">第一个程序</a><h4>语言</h4><a href="/docs/基础语法.html">变量与类型</a><a href="/docs/函数与方法.html">函数与方法</a><a href="/docs/控制流.html">控制流</a><a href="/docs/结构体与枚举.html">结构体与枚举</a><a href="/docs/错误处理.html">错误处理</a><a href="/docs/异步.html">异步与协程</a><a href="/docs/包与模块.html">包与模块</a><h4>标准库</h4><a href="/docs/标准库.html">总览</a><a href="/docs/输入输出.html">输入输出与文件</a><a href="/docs/字符串.html">字符串</a><a href="/docs/JSON.html">JSON</a><a href="/docs/网络.html">网络与 HTTP</a><a class=on href="/docs/大模型.html">大模型</a><h4>生态</h4><a href="/docs/框架.html">Web / CLI / Agent</a><h4>参考</h4><a href="/docs/命令行工具.html">命令行工具</a><a href="/docs/保留字.html">保留字与陷阱</a><a href="/docs/常见问题.html">常见问题</a><a href="/docs/给AI.html">给 AI / Agent</a></nav></aside>
 <main class="main"><article><h1>大模型</h1><p>标准库 <code>大模型</code> 模块走 OpenAI 兼容协议。更高层的 agent（自动工具派发/流式/重试）用 <a href="/docs/框架.html">qi-harness</a>。</p><h2>底层直连</h2><pre><code>导入 标准库.大模型 作为 大模型;
-变量 会话 = 大模型.创建会话();
-大模型.设置配置(会话, "base_url", "https://api.deepseek.com");
-变量 回复 = 大模型.对话(会话, "你好");</code></pre><h2>用 qi-harness（推荐）</h2><pre><code>导入 Harness::{ 大模型, 配置系统提示, 开启会话, 创建代理, 简单问, 关闭代理 };
-变量 配置 = 大模型("https://api.deepseek.com", 密钥, "deepseek-chat");
+导入 标准库.操作系统;
+
+变量 密钥: 字符串 = 操作系统.获取环境变量("QI_LLM_KEY");
+变量 会话 = 大模型.创建会话("https://api.deepseek.com", "deepseek-chat", 密钥);  // 端点, 模型, 密钥
+大模型.设置配置(会话, "temperature", "0.7");
+变量 回复 = 大模型.对话(会话, "你好");
+大模型.关闭会话(会话);</code></pre><h2>用 qi-harness（推荐）</h2><pre><code>导入 Harness::{ 大模型, 配置系统提示, 开启会话, 创建代理, 简单问, 关闭代理 };
+导入 标准库.操作系统;
+
+变量 密钥: 字符串 = 操作系统.获取环境变量("QI_LLM_KEY");
+变量 配置 = 大模型("https://api.deepseek.com", 密钥, "deepseek-chat");  // 端点, 密钥, 模型
 变量 会话 = 开启会话(配置);
 变量 代理值 = 创建代理("助手", 会话);
 IO.打印行(简单问(代理值, "用一句话介绍奇语"));
-关闭代理(代理值);</code></pre><blockquote class=tip>密钥从环境变量读，别硬编码：<code>系统.获取环境变量("QI_LLM_KEY")</code>。</blockquote><div class=pager><a href="/docs/网络.html">← 网络与 HTTP</a><a href="/docs/框架.html">Web / CLI / Agent →</a></div></article></main>
+关闭代理(代理值);</code></pre><blockquote class=tip>密钥从环境变量读，别硬编码：<code>操作系统.获取环境变量("QI_LLM_KEY")</code>。</blockquote><div class=pager><a href="/docs/网络.html">← 网络与 HTTP</a><a href="/docs/框架.html">Web / CLI / Agent →</a></div></article></main>
 </div>
 <footer class="site">
   <div class="wrap">

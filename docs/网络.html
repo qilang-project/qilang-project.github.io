@@ -41,11 +41,12 @@
 <aside class="side"><nav aria-label="文档目录"><h4>开始</h4><a href="/docs/">简介</a><a href="/docs/安装.html">安装</a><a href="/docs/第一个程序.html">第一个程序</a><h4>语言</h4><a href="/docs/基础语法.html">变量与类型</a><a href="/docs/函数与方法.html">函数与方法</a><a href="/docs/控制流.html">控制流</a><a href="/docs/结构体与枚举.html">结构体与枚举</a><a href="/docs/错误处理.html">错误处理</a><a href="/docs/异步.html">异步与协程</a><a href="/docs/包与模块.html">包与模块</a><h4>标准库</h4><a href="/docs/标准库.html">总览</a><a href="/docs/输入输出.html">输入输出与文件</a><a href="/docs/字符串.html">字符串</a><a href="/docs/JSON.html">JSON</a><a class=on href="/docs/网络.html">网络与 HTTP</a><a href="/docs/大模型.html">大模型</a><h4>生态</h4><a href="/docs/框架.html">Web / CLI / Agent</a><h4>参考</h4><a href="/docs/命令行工具.html">命令行工具</a><a href="/docs/保留字.html">保留字与陷阱</a><a href="/docs/常见问题.html">常见问题</a><a href="/docs/给AI.html">给 AI / Agent</a></nav></aside>
 <main class="main"><article><h1>网络与 HTTP</h1><h2>HTTP 客户端</h2><pre><code>导入 标准库.HTTP;
 变量 响应 = HTTP.获取("https://example.com");
+变量 数据 = "{\"名称\":\"奇语\"}";
 变量 结果值 = HTTP.发送("https://api.example.com", 数据);  // POST
 变量 状态码 = HTTP.获取状态码("https://example.com");</code></pre><blockquote class=warn>HTTP 模块名是<strong>大写</strong> <code>HTTP</code>，不是 <code>http</code>。</blockquote><h2>TCP / UDP</h2><pre><code>导入 标准库.网络 作为 网络;
 变量 连接 = 网络.TCP连接("127.0.0.1", 6759, 5000);  // 主机,端口,超时ms
 网络.TCP写入(连接, "你好");
-变量 数据 = 网络.TCP读取(连接);
+变量 数据 = 网络.TCP读取(连接, 4096);   // 句柄, 缓冲区字节数
 网络.TCP关闭(连接);</code></pre><blockquote class=tip>要写完整的 HTTP 服务器，用 <a href="/docs/框架.html">qi-web</a> 框架（147k RPS）。</blockquote><div class=pager><a href="/docs/JSON.html">← JSON</a><a href="/docs/大模型.html">大模型 →</a></div></article></main>
 </div>
 <footer class="site">

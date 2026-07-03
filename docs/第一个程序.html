@@ -47,7 +47,7 @@
 }</code></pre><h2>编译器命令</h2><pre><code>qi run 你好.qi      # 编译并运行
 qi check 你好.qi    # 只检查语法
 qi compile 你好.qi -o 你好   # 编译成原生可执行文件
-qi format 你好.qi -i # 格式化</code></pre><h2>稍微大一点的例子</h2><pre><code>包 主程序;
+qifmt 你好.qi       # 格式化（qi format 是未实现的桩）</code></pre><h2>稍微大一点的例子</h2><pre><code>包 主程序;
 导入 标准库.输入输出 作为 IO;
 
 函数 阶乘(n: 整数) : 整数 {

@@ -43,24 +43,24 @@
 导入 标准库.输入输出 作为 IO;
 函数 入口() {
     IO.打印行("你好");
-}</code></pre><ul><li>入口函数必须叫 <code>入口</code>（不是 主函数 / main）</li><li>打印用 <code>IO.打印行</code> / <code>IO.打印</code></li><li>语句以 <code>;</code> 结尾；支持中英标点（<code>；，：（）</code> 都行）</li></ul><h2>最高频错误（务必避免）</h2><ol><li><strong>保留字当变量名</strong>：<code>结果 类型 选项 通道 尝试 返回 等待 异步 新建 选择 情况 在 作为 未来 继续 跳出 捕获 抛出 最终</code> 不能做标识符。要用就改名：<code>结果值 类型名</code>。</li><li><strong>整数是 i64 不是 i32</strong>。</li><li><strong>方法是 Go 风格</strong>：<code>函数 (自己 类型) 方法名(...) { }</code>，不是 <code>方法 类型.名</code>。</li><li><strong>读取文件失败返回空串</strong>（不是 NULL）；用 <code>字符串::字节长度(x)==0</code> 判失败。<code>写入文件</code> 返回 1=成功。</li><li><strong>HTTP 模块大写</strong> <code>标准库.HTTP</code>。</li><li><strong>跨包用 destructure 导入</strong>：<code>导入 Web::{创建应用, 启动}</code>，不支持 <code>Web::函数()</code>。</li><li><strong>端口</strong>用随机高位（3076/6759/43510），不要 8080/3000。</li></ol><h2>类型速查</h2><pre><code>整数(i64)  浮点数(f64)  布尔(真/假)  字符串  字节  短整数  空</code></pre><h2>常用模式</h2><pre><code>// 变量
-变量 名: 字符串 = "x";
-变量 数: 整数 = 1;
-常量 PI = 3.14;
-// 控制流
-如果 (n &lt; 2) { 返回 n; } 否则 { 返回 n - 1; }
-当 (i &lt; 10) { i = i + 1; }
-对于 n 在 [1, 2, 3] { IO.打印(n); }   // 无区间语法,计数用 当
-// 函数
-函数 加(x: 整数, y: 整数) : 整数 { 返回 x + y; }
-// 结构体
-类型 点 { x: 浮点数, y: 浮点数 }
-变量 p = (点 { x: 1.0, y: 2.0 });
-// 异步
-函数 双(v: 整数) : 未来&lt;整数&gt; { 返回 v * 2; }
-变量 r: 整数 = 等待 双(21);
-// 数字转字符串拼接
-变量 行 = "n=" + 整数转字符串(数);</code></pre><h2>三个框架（用奇语写）</h2><ul><li><strong>qi-web</strong>：<code>导入 Web::{创建应用, 配置, 获取, 文本, 运行应用}</code>，handler 签名 <code>函数(上下文): 响应</code>。</li><li><strong>qi-cli</strong>：<code>导入 CLI::{创建应用, 创建命令, 执行}</code>，handler 签名 <code>函数(上下文): 整数</code>，链式 API 要回写。</li><li><strong>qi-harness</strong>：<code>导入 Harness::{大模型, 开启会话, 创建代理, 简单问, 关闭代理}</code>，密钥从环境变量读。</li></ul><p>每个框架带 <code>SKILL.md</code>，生成对应代码前先读：<a href="https://github.com/qilang-project/qi-web/blob/main/SKILL.md">qi-web</a> · <a href="https://github.com/qilang-project/qi-cli/blob/main/SKILL.md">qi-cli</a> · <a href="https://github.com/qilang-project/qi-harness/blob/main/SKILL.md">qi-harness</a> · <a href="https://github.com/qilang-project/qi-lang/blob/main/SKILL.md">基础语言</a>。</p><h2>验证生成的代码</h2><pre><code>qi check 文件.qi   # 只查语法，报 rustc 风格错误
+}</code></pre><ul><li>入口函数必须叫 <code>入口</code>（不是 主函数 / main）</li><li>打印用 <code>IO.打印行</code> / <code>IO.打印</code></li><li>语句以 <code>;</code> 结尾；支持中英标点（<code>；，：（）</code> 都行）</li></ul><h2>最高频错误（务必避免）</h2><ol><li><strong>保留字当变量名</strong>：<code>结果 类型 选项 通道 尝试 返回 等待 异步 新建 选择 情况 在 作为 未来 继续 跳出 捕获 抛出 最终</code> 不能做标识符。要用就改名：<code>结果值 类型名</code>。</li><li><strong>整数是 i64 不是 i32</strong>。</li><li><strong>方法是 Go 风格</strong>：<code>函数 (自己 类型) 方法名(...) { }</code>，不是 <code>方法 类型.名</code>。</li><li><strong>读取文件失败返回空串</strong>（不是 NULL）；用 <code>字符串::字节长度(x)==0</code> 判失败。<code>写入文件</code> 返回 1=成功。</li><li><strong>HTTP 模块大写</strong> <code>标准库.HTTP</code>。</li><li><strong>跨包用 destructure 导入</strong>：<code>导入 Web::{创建应用, 配置, 获取, 运行应用}</code>，不支持 <code>Web::函数()</code>。</li><li><strong>端口</strong>用随机高位（3076/6759/43510），不要 8080/3000。</li></ol><h2>类型速查</h2><pre><code>整数(i64)  浮点数(f64)  布尔(真/假)  字符串  字节  短整数  空</code></pre><h2>常用模式</h2><pre><code>// 函数 / 结构体 定义在顶层（「加」是保留字，用 加法）
+函数 加法(x: 整数, y: 整数) : 整数 { 返回 x + y; }
+函数 双(v: 整数) : 未来&lt;整数&gt; { 返回 v * 2; }   // 异步:返回 未来&lt;T&gt; 自动包装
+类型 点 { x: 浮点数, y: 浮点数, }
+
+// 语句写在 入口 里
+函数 入口() {
+    变量 名: 字符串 = "x";
+    变量 数: 整数 = 1;
+    常量 PI = 3.14;
+    如果 (数 &lt; 2) { IO.打印行("小"); } 否则 { IO.打印行("大"); }
+    变量 i = 0;
+    当 (i &lt; 10) { i = i + 1; }
+    对于 n 在 [1, 2, 3] { IO.打印(n); }   // 无区间语法,计数用 当
+    变量 p = (点 { x: 1.0, y: 2.0 });     // 结构体字面量要括号包裹
+    变量 r: 整数 = 等待 双(21);           // 等待 取 Future 值
+    变量 行 = "n=" + 整数转字符串(数);     // 数字转字符串再拼
+}</code></pre><h2>三个框架（用奇语写）</h2><ul><li><strong>qi-web</strong>：<code>导入 Web::{创建应用, 配置, 获取, 文本, 运行应用}</code>，handler 签名 <code>函数(上下文): 响应</code>。</li><li><strong>qi-cli</strong>：<code>导入 CLI::{创建应用, 创建命令, 执行}</code>，handler 签名 <code>函数(上下文): 整数</code>，链式 API 要回写。</li><li><strong>qi-harness</strong>：<code>导入 Harness::{大模型, 开启会话, 创建代理, 简单问, 关闭代理}</code>，密钥从环境变量读。</li></ul><p>每个框架带 <code>SKILL.md</code>，生成对应代码前先读：<a href="https://github.com/qilang-project/qi-web/blob/main/SKILL.md">qi-web</a> · <a href="https://github.com/qilang-project/qi-cli/blob/main/SKILL.md">qi-cli</a> · <a href="https://github.com/qilang-project/qi-harness/blob/main/SKILL.md">qi-harness</a> · <a href="https://github.com/qilang-project/qi-lang/blob/main/SKILL.md">基础语言</a>。</p><h2>验证生成的代码</h2><pre><code>qi check 文件.qi   # 只查语法，报 rustc 风格错误
 qi run 文件.qi     # 编译运行</code></pre><div class=pager><a href="/docs/常见问题.html">← 常见问题</a><span></span></div></article></main>
 </div>
 <footer class="site">
