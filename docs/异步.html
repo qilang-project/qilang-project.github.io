@@ -48,10 +48,10 @@
     IO.打印行(整数转字符串(结果值));   // 42
 }</code></pre><h2>支持的 Future 类型</h2><ul><li><code>未来&lt;整数&gt;</code> / <code>未来&lt;浮点数&gt;</code> / <code>未来&lt;布尔&gt;</code> / <code>未来&lt;字符串&gt;</code></li></ul><h2>协程与通道</h2><pre><code>变量 信道 = 通道&lt;整数&gt;();
 启动 发送者(信道);
-变量 值 = &lt;- 信道;</code></pre><h2>Select 多路复用（暂不可用）</h2><pre><code>选择 {
+变量 值 = &lt;- 信道;</code></pre><h2>Select 多路复用</h2><pre><code>选择 {
     情况 值 = &lt;- 通道1 { IO.打印(值); }
     情况 文本 = &lt;- 通道2 { IO.打印行(文本); }
-}</code></pre><blockquote class=warn><code>选择/情况</code> 目前解析通过但 codegen 会静默跳过所有分支——先别用。多通道就依次阻塞接收，或轮询 + <code>时间.睡眠毫秒</code>。</blockquote><blockquote class=warn>完整 async/await 状态机 codegen 约覆盖 70%；复杂控制流内嵌 await 会退化到同步包装，行为正确但非真协程切换。</blockquote><div class=pager><a href="/docs/错误处理.html">← 错误处理</a><a href="/docs/包与模块.html">包与模块 →</a></div></article></main>
+}</code></pre><blockquote class=warn><code>选择</code> 自 2026.07.03 起可用：非阻塞轮询多通道，支持 <code>默认</code> 分支（无就绪立即走）与 <code>超时(毫秒)</code> 分支；两者皆无则阻塞至有通道就绪。块结尾需分号。</blockquote><blockquote class=warn>完整 async/await 状态机 codegen 约覆盖 70%；复杂控制流内嵌 await 会退化到同步包装，行为正确但非真协程切换。</blockquote><div class=pager><a href="/docs/错误处理.html">← 错误处理</a><a href="/docs/包与模块.html">包与模块 →</a></div></article></main>
 </div>
 <footer class="site">
   <div class="wrap">
