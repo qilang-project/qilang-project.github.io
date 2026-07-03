@@ -1,6 +1,6 @@
 # 奇语言 Qi — 完整语言参考(LLM 可读版)
 
-版本 2026.07.03-1 · 官网 https://qilang.org/ · 源码 https://github.com/qilang-project/qi
+版本 2026.07.03-2 · 官网 https://qilang.org/ · 源码 https://github.com/qilang-project/qi
 本文所有代码均在真实编译器上 `qi run` 验证通过。速成规则见 https://qilang.org/llms.txt
 
 奇语言(Qi)= 100% 中文关键字、经 LLVM 21(inkwell 后端)编译为原生可执行文件的编译型语言。
@@ -296,7 +296,7 @@ CLI(全部有中文别名):
     qi --target linux --arch x86_64 --release-runtime compile 程序.qi -o 程序_linux
 
 安装布局:/usr/local/bin/qi + /usr/local/lib/qi/(运行时归档),解压即用。
-下载:https://github.com/qilang-project/qi/releases (2026.07.03-1,macOS arm64/Linux x64/Windows x64)
+下载:https://github.com/qilang-project/qi/releases (2026.07.03-2,macOS arm64/Linux x64/Windows x64)
 一键脚本:curl -fsSL https://raw.githubusercontent.com/qilang-project/qi/main/scripts/install.sh | bash
 
 ═══════════════════════════════════════

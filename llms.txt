@@ -1,7 +1,7 @@
 # 奇语言 Qi (qilang)
 
 > 100% 中文关键字、经 LLVM 21 编译为原生机器码的编译型编程语言。语法类似 Rust/Go 的中文化版本。
-> 当前版本 2026.07.03-1。ARC 自动内存管理默认开启;完整异常机制(尝试/捕获/最终/抛出);包管理 qi get;-O 四档优化管线;macOS/Linux/Windows 三平台 + 交叉编译。
+> 当前版本 2026.07.03-2。ARC 自动内存管理默认开启;完整异常机制(尝试/捕获/最终/抛出);包管理 qi get;-O 四档优化管线;macOS/Linux/Windows 三平台 + 交叉编译。
 > 官网 https://qilang.org/ · 完整语言参考(LLM 可读): https://qilang.org/llms-full.txt
 
 ## 骨架
@@ -64,4 +64,4 @@ qi test(发现并运行 *_测.qi) | qi get(拉依赖) | qifmt 文件.qi(格式�
 -O none|basic|standard|maximum 优化;--target linux --arch x86_64 交叉编译(zig 链接,零 Docker)
 
 ## 下载
-https://github.com/qilang-project/qi/releases 2026.07.03-1(macOS arm64 / Linux x64 / Windows x64,解压即用)
+https://github.com/qilang-project/qi/releases 2026.07.03-2(macOS arm64 / Linux x64 / Windows x64,解压即用)

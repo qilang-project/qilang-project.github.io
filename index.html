@@ -25,11 +25,11 @@
 {"@context":"https://schema.org","@graph":[
 {"@type":"Organization","@id":"https://qilang.org/#org","name":"qilang-project","url":"https://qilang.org/","logo":"https://qilang.org/og.png","sameAs":["https://github.com/qilang-project"]},
 {"@type":"WebSite","@id":"https://qilang.org/#site","url":"https://qilang.org/","name":"奇语言 Qi","inLanguage":"zh-CN","publisher":{"@id":"https://qilang.org/#org"}},
-{"@type":"SoftwareApplication","name":"奇语言 Qi","alternateName":["Qi","Qi语言","Qi Language"],"applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Linux, Windows","softwareVersion":"2026.07.03-1","url":"https://qilang.org/","downloadUrl":"https://github.com/qilang-project/qi/releases","license":"https://opensource.org/licenses/MIT","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"100% 中文关键字的编译型编程语言:LLVM 21 原生后端、ARC 自动内存管理、完整异常处理、Go 风格并发、包管理与交叉编译。","publisher":{"@id":"https://qilang.org/#org"}},
+{"@type":"SoftwareApplication","name":"奇语言 Qi","alternateName":["Qi","Qi语言","Qi Language"],"applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Linux, Windows","softwareVersion":"2026.07.03-2","url":"https://qilang.org/","downloadUrl":"https://github.com/qilang-project/qi/releases","license":"https://opensource.org/licenses/MIT","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"100% 中文关键字的编译型编程语言:LLVM 21 原生后端、ARC 自动内存管理、完整异常处理、Go 风格并发、包管理与交叉编译。","publisher":{"@id":"https://qilang.org/#org"}},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"奇语言是玩具项目吗?","acceptedAnswer":{"@type":"Answer","text":"不是。奇语言有 LLVM 21 原生后端、ARC 自动内存管理、完整异常处理(尝试/捕获/最终/抛出)、Go 风格 M:N 协程、30+ 标准库模块、包管理器 qi get、交叉编译、LSP + VSCode 扩展、测试框架与三平台 CI,155 个可运行示例。"}},
 {"@type":"Question","name":"奇语言性能如何?","acceptedAnswer":{"@type":"Answer","text":"同机实测:计算密集 fib(40) 0.28s,快过 Go 1.26(0.32s)约 15%,是 Node 24(0.71s)的 2.5 倍;qi-web 框架 147k RPS,达到 Go net/http 的 90%,为 Node 单进程的 2 倍。"}},
-{"@type":"Question","name":"怎么安装奇语言?","acceptedAnswer":{"@type":"Answer","text":"从 GitHub Releases 下载 2026.07.03-1 预编译包(macOS/Linux/Windows)解压即用;或运行一键安装脚本 install.sh;亦有 macOS pkg 与 Windows msi 安装器。macOS 需 Xcode 命令行工具,Linux 需 clang。"}},
+{"@type":"Question","name":"怎么安装奇语言?","acceptedAnswer":{"@type":"Answer","text":"从 GitHub Releases 下载 2026.07.03-2 预编译包(macOS/Linux/Windows)解压即用;或运行一键安装脚本 install.sh;亦有 macOS pkg 与 Windows msi 安装器。macOS 需 Xcode 命令行工具,Linux 需 clang。"}},
 {"@type":"Question","name":"中文关键字编程不是噱头吗?","acceptedAnswer":{"@type":"Answer","text":"中文只在词法层,不是图形化拖拽或解释器贴皮。代码经 LALRPOP 解析、LLVM 生成原生机器码,与 Rust/Go 同一条工业管线。对中文母语者,关键字零翻译降低认知负荷。"}},
 {"@type":"Question","name":"奇语言内存管理怎么做?","acceptedAnswer":{"@type":"Answer","text":"ARC(自动引用计数)默认开启:字符串、结构体、数组、闭包环境自动回收,长跑服务内存稳定有界。句柄式资源(JSON/列表/哈希表等)手动释放;循环引用不回收,与 Swift 相同。"}},
 {"@type":"Question","name":"AI 或 Agent 能写奇语言吗?","acceptedAnswer":{"@type":"Answer","text":"可以。官网提供 llms.txt 与 llms-full.txt 机器可读语言参考,GitHub 提供可安装的 agent skill(npx skills add https://github.com/qilang-project/qi-lang),文档站有专门的「给 AI / Agent」页。"}}
@@ -100,7 +100,7 @@
 
   <section id="lang">
     <h2>语言能力全景</h2>
-    <p class="h2sub">类型、控制流、结构体与方法、闭包、异常、并发——每段代码都在 2026.07.03-1 真实编译器上验证通过。</p>
+    <p class="h2sub">类型、控制流、结构体与方法、闭包、异常、并发——每段代码都在 2026.07.03-2 真实编译器上验证通过。</p>
     <div class="grid2">
       <div class="codecard">
         <div class="bar"><i></i><i></i><i></i><em>类型与变量.qi</em></div>
@@ -257,17 +257,17 @@
     <p class="h2sub">下载解压即用——bin/qi 会自动找到同包的运行时。</p>
     <div class="steps">
       <div>
-        <h3>1 · 下载 2026.07.03-1</h3>
+        <h3>1 · 下载 2026.07.03-2</h3>
         <div class="dl">
-          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-1/qi-2026.07.03-1-macos-arm64.tar.gz">macOS (Apple Silicon) <span>tar.gz · 53MB</span></a>
-          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-1/qi-2026.07.03-1-linux-x64.tar.gz">Linux (x86_64) <span>tar.gz · 58MB</span></a>
-          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-1/qi-2026.07.03-1-windows-x64.zip">Windows (x86_64) <span>zip · 57MB</span></a>
+          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-2/qi-2026.07.03-2-macos-arm64.tar.gz">macOS (Apple Silicon) <span>tar.gz · 53MB</span></a>
+          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-2/qi-2026.07.03-2-linux-x64.tar.gz">Linux (x86_64) <span>tar.gz · 58MB</span></a>
+          <a href="https://github.com/qilang-project/qi/releases/download/2026.07.03-2/qi-2026.07.03-2-windows-x64.zip">Windows (x86_64) <span>zip · 57MB</span></a>
         </div>
         <p class="bench-note" style="margin-top:12px">全部版本见 <a href="https://github.com/qilang-project/qi/releases" target="_blank" rel="noopener">GitHub Releases</a>,亦有 <a href="/docs/安装.html">一键安装脚本</a> 与 pkg/msi 安装器。macOS 编译链接需 Xcode 命令行工具(<code>xcode-select --install</code>);Linux 需 clang。</p>
       </div>
       <div>
         <h3>2 · 写第一个程序</h3>
-        <pre class="shell"><span class="p">$</span> tar xzf qi-2026.07.03-1-macos-arm64.tar.gz
+        <pre class="shell"><span class="p">$</span> tar xzf qi-2026.07.03-2-macos-arm64.tar.gz
 <span class="p">$</span> cat &gt; 你好.qi &lt;&lt; 'EOF'
 包 主程序;
 
@@ -296,7 +296,7 @@ EOF
     </details>
     <details>
       <summary>怎么安装?</summary>
-      <p>三种方式:① 下载 <a href="#start">2026.07.03-1 预编译包</a> 解压即用;② 一键脚本 <code>curl -fsSL https://raw.githubusercontent.com/qilang-project/qi/main/scripts/install.sh | bash</code>;③ macOS pkg / Windows msi 安装器。macOS 需 Xcode 命令行工具,Linux 需 clang。</p>
+      <p>三种方式:① 下载 <a href="#start">2026.07.03-2 预编译包</a> 解压即用;② 一键脚本 <code>curl -fsSL https://raw.githubusercontent.com/qilang-project/qi/main/scripts/install.sh | bash</code>;③ macOS pkg / Windows msi 安装器。macOS 需 Xcode 命令行工具,Linux 需 clang。</p>
     </details>
     <details>
       <summary>这不就是刻板印象里的"中文编程"吗?</summary>
